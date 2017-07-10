@@ -5,7 +5,9 @@ The templates and instructions in this repo are for new and recent network featu
 ## Feature status
 Last updated: 07/10/2017.
 
-The new scale set networking features are now documented here - this link overrides the notes below: [https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-networking](https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-networking)
+Blog annoucnement: [New networking features in Azure scale sets](https://azure.microsoft.com/blog/new-networking-features-in-azure-scale-sets/)
+
+The new scale set networking features are now documented here - this link overrides the preview notes below: [https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-networking](https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/virtual-machine-scale-sets-networking)
 
 
 | Feature                    | Description                                                             | Status          | Start using |
