@@ -19,7 +19,7 @@ The new scale set networking features are now documented here - this link overri
 | Multiple NICs per VM       | Support multiple NICs on each VMSS VM                                   | GA| See below|
 | Multiple IPs per VM for VMSS       | Multiple Customer Address space per VMSS VM                     | GA | See below|
 | NSG for VMSS               | Configure Network Security Group at a VM scale set level                | GA              | See below   |
-| IPv6 support with Load Balancer | Support private IPv6 addresses on VMSS VM NICs and routing via load balancer pools | See below|
+| IPv6 support with Load Balancer | Support private IPv6 addresses on VMSS VM NICs and routing via load balancer pools | Limited preview|
 | Public IPv4 address per VM | Assign a public IP address to each VMSS VM                              | GA | See below|
 
 
