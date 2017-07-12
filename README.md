@@ -1,4 +1,4 @@
-# Azure VM Scale Sets
+s# Azure VM Scale Sets
 This repo is for managing Azure virtual machine scale sets, in particular preview programs and issue.
 
 ## Where to log issues 
