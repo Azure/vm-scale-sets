@@ -3,7 +3,7 @@
 The templates and instructions in this repo are for new and recent network features being added to Azure VM scale sets. 
 
 ## Feature status
-Last updated: 07/10/2017.
+Last updated: 07/14/2017.
 
 Blog annoucnement: [New networking features in Azure scale sets](https://azure.microsoft.com/blog/new-networking-features-in-azure-scale-sets/)
 
