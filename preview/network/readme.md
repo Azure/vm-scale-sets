@@ -244,10 +244,9 @@ GET https://management.azure.com/subscriptions/your-subscription-id/resourceGrou
 ```
 
 ### Public IP address template examples
+See [201-vmss-public-ip-linux](https://github.com/Azure/azure-quickstart-templates/tree/master/201-vmss-public-ip-linux) in the Azure Quickstart Templates repository for a simple example of a template which creates a scale set with public IP addresses per VM, and also a load balancer with inbound NAT pools.
 
-Please help us create more template examples by submitting pull requests for your templates to this repo. Thanks!
-
-This [example](https://github.com/Azure/vm-scale-sets/blob/master/publicip-dns/azuredeploypip-autoscale.json) is a simple self-contained Ubuntu autoscale example which uses Azure Managed Disks. The scale set scales out when avg CPU across all VMs > 60%, and scales in when avg CPU < 30%. With public IP per VM configured, you can access each VM via both inbound NAT rules (using the load balancer public IP address with ports starting at 50000), and directly by going to each VMs public IP address at port 9000.
+This [example](https://github.com/Azure/vm-scale-sets/blob/master/preview/network/azuredeploypip-autoscale.json) is a simple self-contained Ubuntu autoscale example which uses Azure Managed Disks. The scale set scales out when avg CPU across all VMs > 60%, and scales in when avg CPU < 30%. With public IP per VM configured, you can access each VM via both inbound NAT rules (using the load balancer public IP address with ports starting at 50000), and directly by going to each VMs public IP address at port 9000.
 
 - Deploy the scale set with an instance count of 1.
 - Browse to the website of vm#0 (port 9000), which shows the current backend VM name.
