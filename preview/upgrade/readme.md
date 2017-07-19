@@ -38,11 +38,14 @@ Automatic OS upgrades are offered when the following conditions are met:
 		Version: latest
 
 
+## When automatic upgrade happens
+- Autoamtic OS upgrades are triggered when the publisher for your OS sku releases a new image version.
+
 ## How to configure auto-updates
 
-- Sign up for the limited preview (details will be provided)
+- Sign up for the limited preview 
 
-- Upgrade policy is set to Rolling. 
+- Set UpgradePolicy is set to Rolling. 
 
 - Syntax
 ```
@@ -77,7 +80,9 @@ If the number of instances which have failed to be upgraded in this rolling upgr
 1) Make a post request to /subscriptions/<subId>/resourceGroups/<rgName>/Microsoft.Compute/virtualMachineScaleSets/<vmssName>/osRollingUpgrade 
 Calls to this API will only change the OS disks of your machine if there is a new OS to update your VMs to, and it will conform to the rolling upgrade policies you specify in the rollingUpgradePolicy section of the vmss configuration.
 
-2) Change the OS version in your VMSS
+2) Change the OS version in your VMSS.
+
+Note: you can have the OS version set to "latest" in your VMSS properties. However a manually triggered rolling upgrade will only take place after a newer version of the corresponding OS image has been published.
 
 CRP API version is 2017-03-30
 
