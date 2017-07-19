@@ -1,6 +1,6 @@
-# Azure VM scale set automatic upgrades
+# Azure VM scale set automatic upgrade and rolling upgrade preview
 
-Welcome to the VM scale set automatic OS image update preview.
+Welcome to the VM scale set automatic OS image update, and manually triggered rolling update preview.
 
 This is currently a limited preview - you won't be able to use this feature unless your Azure subscription is registered to use it.
 
@@ -8,7 +8,7 @@ Automatic OS upgrades are being previewed only for non-Service Fabric scale sets
 
 Sign up for the automatic upgrade and rolling upgrade feature previews [here](https://forms.office.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRynq-GTEl8lLqDPOris8e0JUMU9BQllYT1c5SzlIRlA4UTI0V0FUMDU3MC4u).
 
-Last update: 6/10/17.
+Last update: 7/19/17.
 
 ## Pre-requisites
 Automatic OS upgrades are offered when the following conditions are met:
@@ -32,7 +32,7 @@ Automatic OS upgrades are offered when the following conditions are met:
 		Sku: 16.04-LTS
 		Version: latest
 
-	For testing purposes you can use this nightly build during preview as well:
+	For testing purposes you can use this nightly build during preview as well. This requires a separate feature flag, so please let us know if you plan to use other than the 3 OS versions above:
 
 		Publisher: Canonical
 		Offer: UbuntuServer
