@@ -140,9 +140,6 @@
             "type": "Microsoft.Compute/virtualMachineScaleSets",
             "name": "[parameters('scaleSetName')]",
             "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[concat('Microsoft.Network/virtualNetworks/', parameters('existingVnetName'))]"
-            ],
             "sku": {
                 "name": "[parameters('rdshVmSize')]",
                 "tier": "Standard",
