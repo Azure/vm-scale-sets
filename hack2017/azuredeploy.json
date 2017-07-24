@@ -115,7 +115,7 @@
         "namingInfix": "[toLower(substring(concat(parameters('scaleSetName'), uniqueString(resourceGroup().id)), 0, 9))]",
         "nicName": "[concat(variables('namingInfix'), '-nic')]",
         "ipConfigName": "[concat(variables('namingInfix'), 'ipconfig')]",
-        "imageName": "[concat(parameters('existingRdshCollectionName'), 'img')]"
+        "imageName": "[concat(parameters('scaleSetName'), 'img')]"
     },
     "resources": [
         {
