@@ -33,7 +33,7 @@
             "metadata": {
                 "description": "The size of the RDSH virtual machines"
             },
-            "defaultValue": "Standard_A2"
+            "defaultValue": "Standard_D2_v2"
         },
         "userLogoffTimeoutInMinutes": {
             "type": "int",
@@ -76,7 +76,7 @@
         },
         "scaleSetName": {
             "type": "string",
-            "defaultValue": "rdsh-scaleset",
+            "defaultValue": "rdsvmss",
             "metadata": {
                 "description": "Scale set for new RDSH instances"
             }
@@ -114,7 +114,8 @@
         "scriptFileName": "Script.ps1",
         "namingInfix": "[toLower(substring(concat(parameters('scaleSetName'), uniqueString(resourceGroup().id)), 0, 9))]",
         "nicName": "[concat(variables('namingInfix'), '-nic')]",
-        "ipConfigName": "[concat(variables('namingInfix'), 'ipconfig')]"
+        "ipConfigName": "[concat(variables('namingInfix'), 'ipconfig')]",
+        "imageName": "[concat(parameters('existingRdshCollectionName'), 'img')]"
     },
     "resources": [
         {
