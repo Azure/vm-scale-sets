@@ -26,8 +26,8 @@
         "existingSubnetName": {
             "value": "subnet"
         },
-        "availabilitySet": {
-            "value": "rdsh-availabilityset"
+        "scaleSetName": {
+            "value": "rdshvmss"
         }
     }
 }
