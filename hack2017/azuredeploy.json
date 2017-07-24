@@ -184,13 +184,12 @@
                     "extensionProfile": {
                         "extensions": [
                         {
-                            "name": "sessionHost",
+                            "name": "sessionhost",
                             "properties": {
                                 "publisher": "Microsoft.Powershell",
                                 "type": "DSC",
                                 "typeHandlerVersion": "2.9",
                                 "autoUpgradeMinorVersion": true,
-                                "forceUpdateTag": "[parameters('powershelldscUpdateTagVersion')]",
                                 "settings": {
                                     "ModulesUrl": "[concat(parameters('_artifactsLocation'),'/DSC/Configuration.zip', parameters('_artifactsLocationSasToken'))]",
                                     "ConfigurationFunction": "Configuration.ps1\\SessionHost",
@@ -216,7 +215,6 @@
                                 "type": "CustomScriptExtension",
                                 "typeHandlerVersion": "1.8",
                                 "autoUpgradeMinorVersion": true,
-                                "forceUpdateTag": "[parameters('powershelldscUpdateTagVersion')]",
                                 "settings": {
                                     "fileUris": [
                                         "[variables('impersonateScript')]",
