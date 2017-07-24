@@ -74,11 +74,11 @@
                 "description": "Subnet name"
             }
         },
-        "availabilitySet": {
+        "scaleSetName": {
             "type": "string",
-            "defaultValue": "rdsh-availabilityset",
+            "defaultValue": "rdsh-scaleset",
             "metadata": {
-                "description": "Availability set for new RDSH instances"
+                "description": "Scale set for new RDSH instances"
             }
         },
         "_artifactsLocation": {
@@ -95,9 +95,7 @@
             },
             "defaultValue": ""
         }
-
     },
-
     "variables": {
         "iteration": "[toLower(parameters('rdshUpdateIteration'))]",
         "storageAccountName": "[split( split( parameters('rdshTemplateImageUri'), '/')[2], '.' )[0]]",
@@ -113,150 +111,127 @@
         },
         "scriptParameters": "[concat(variables('p').domain, variables('p').user, variables('p').pwd, variables('p').collection, variables('p').iteration, variables('p').servers, variables('p').timeout)]",
         "scriptFolder": "Scripts",
-        "scriptFileName":  "Script.ps1"
+        "scriptFileName": "Script.ps1",
+        "namingInfix": "[toLower(substring(concat(parameters('scaleSetName'), uniqueString(resourceGroup().id)), 0, 9))]",
+        "nicName": "[concat(variables('namingInfix'), '-nic')]",
+        "ipConfigName": "[concat(variables('namingInfix'), 'ipconfig')]"
     },
-
     "resources": [
         {
-            "apiVersion": "2015-06-15",
-            "type": "Microsoft.Network/networkInterfaces",
-            "name": "[concat('rdsh-', copyindex(),variables('iteration'), '-nic')]",
+            "type": "Microsoft.Compute/images",
+            "apiVersion": "2017-03-30",
+            "name": "[variables('imageName')]",
             "location": "[resourceGroup().location]",
-            "copy": {
-                "name": "rdsh-nic-loop",
-                "count": "[parameters('rdshNumberOfInstances')]"
-            },
             "properties": {
-                "ipConfigurations": [
-                    {
-                        "name": "ipconfig",
-                        "properties": {
-                            "privateIPAllocationMethod": "Dynamic",
-                            "subnet": {
-                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('existingVnetName'), parameters('existingSubnetName'))]"
-                            }
-                        }
-                    }
-                ]
-            }
-        },
-        {
-            "apiVersion": "2015-06-15",
-            "type": "Microsoft.Compute/availabilitySets",
-            "name": "[parameters('availabilitySet')]",
-            "location": "[resourceGroup().location]"
-        },
-        {
-            "apiVersion": "2015-06-15",
-            "type": "Microsoft.Compute/virtualMachines",
-            "name": "[concat('rdsh-', copyindex(),variables('iteration'))]",
-            "location": "[resourceGroup().location]",
-            "copy": {
-                "name": "rdsh-vm-loop",
-                "count": "[parameters('rdshNumberOfInstances')]"
-            },
-            "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/', 'rdsh-', copyindex(),variables('iteration'), '-nic')]"
-            ],
-            "properties": {
-                "hardwareProfile": {
-                    "vmSize": "[parameters('rdshVmSize')]"
-                },
-                "availabilitySet": {
-                    "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySet'))]"
-                },
-                "osProfile": {
-                    "computerName": "[concat('rdsh-', copyindex(),variables('iteration'))]",
-                    "adminUsername": "[parameters('existingAdminUsername')]",
-                    "adminPassword": "[parameters('existingAdminPassword')]"
-                },
                 "storageProfile": {
-                    "osDisk": {
-                        "name": "[concat('rdsh-', copyindex(),variables('iteration'),'-osDisk')]",
-                        "osType": "Windows",
+                    "osDisk" : {
+                        "osType" : "Windows",
+                        "osState": "Generalized",
+                        "blobUri": "[parameters('rdshTemplateImageUri')]",
                         "caching": "ReadWrite",
-                        "createOption": "FromImage",
-                        "image": {
-                            "uri": "[parameters('rdshTemplateImageUri')]"
-                        },
-                        "vhd": {
-                            "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), '2016-01-01').primaryEndpoints.blob, 'vhds/rdsh-', copyindex(), variables('iteration'), '-osdisk.vhd')]"
-                        }
-
-                    }
-                },
-                "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces',concat('rdsh-', copyindex(),variables('iteration'), '-nic'))]"
-                        }
-                    ]
-                },
-                "diagnosticsProfile": {
-                    "bootDiagnostics": {
-                        "enabled": "true",
-                        "storageUri": "[reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), '2016-01-01').primaryEndpoints.blob]"
+                        "storageAccountType": "Standard_LRS"
                     }
                 }
+	        }
+	    },
+        {
+            "apiVersion": "2017-03-30",
+            "type": "Microsoft.Compute/virtualMachineScaleSets",
+            "name": "[parameters('scaleSetName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', parameters('existingVnetName'))]"
+            ],
+            "sku": {
+                "name": "[parameters('rdshVmSize')]",
+                "tier": "Standard",
+                "capacity": "[parameters('rdshNumberOfInstances')]"
             },
-            "resources": [
-                {
-                    "apiVersion": "2015-06-15",
-                    "type": "Microsoft.Compute/virtualMachines/extensions",
-                    "name": "[concat('rdsh-',copyindex(),variables('iteration'),'/sessionhost')]",
-                    "location": "[resourceGroup().location]",
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Compute/virtualMachines', concat('rdsh-', copyindex(),variables('iteration')))]"
-                    ],
-                    "properties": {
-                        "publisher": "Microsoft.Powershell",
-                        "type": "DSC",
-                        "typeHandlerVersion": "2.11",
-                        "autoUpgradeMinorVersion": true,
-                        "settings": {
-                            "ModulesUrl": "[concat(parameters('_artifactsLocation'),'/DSC/Configuration.zip', parameters('_artifactsLocationSasToken'))]",
-                            "ConfigurationFunction": "Configuration.ps1\\SessionHost",
-                            "Properties": {
-                                "DomainName": "[parameters('existingDomainName')]",
-                                "AdminCreds": {
-                                    "UserName": "[parameters('existingAdminUsername')]",
-                                    "Password": "PrivateSettingsRef:AdminPassword"
+            "properties": {
+                "overprovision": "false",
+                "upgradePolicy": {
+                    "mode": "Manual"
+                },
+                "virtualMachineProfile": {
+		            "storageProfile": {
+			            "imageReference": {
+			                "id": "[resourceId('Microsoft.Compute/images', variables('imageName'))]"
+                        }
+                    },
+                    "osProfile": {
+                        "computerNamePrefix": "[variables('namingInfix')]",
+                        "adminUsername": "[parameters('existingAdminUsername')]",
+                        "adminPassword": "[parameters('existingAdminPassword')]"
+                    },
+                    "networkProfile": {
+			            "networkInterfaceConfigurations": [
+			            {
+				            "name": "[variables('nicName')]",
+				            "properties": {
+				                "primary": "true",
+				                "ipConfigurations": [
+					            {
+					                "name": "[variables('ipConfigName')]",
+					                "properties": {
+						                "subnet": {
+						                    "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/virtualNetworks/', variables('virtualNetworkName'), '/subnets/', variables('subnetName'))]"
+						                }
+					                }
+					            }
+				                ]
+				            }
+			            }
+			            ]
+                    },
+                    "extensionProfile": {
+                        "extensions": [
+                        {
+                            "name": "sessionHost",
+                            "properties": {
+                                "publisher": "Microsoft.Powershell",
+                                "type": "DSC",
+                                "typeHandlerVersion": "2.9",
+                                "autoUpgradeMinorVersion": true,
+                                "forceUpdateTag": "[parameters('powershelldscUpdateTagVersion')]",
+                                "settings": {
+                                    "ModulesUrl": "[concat(parameters('_artifactsLocation'),'/DSC/Configuration.zip', parameters('_artifactsLocationSasToken'))]",
+                                    "ConfigurationFunction": "Configuration.ps1\\SessionHost",
+                                    "Properties": {
+                                        "DomainName": "[parameters('existingDomainName')]",
+                                        "AdminCreds": {
+                                            "UserName": "[parameters('existingAdminUsername')]",
+                                            "Password": "PrivateSettingsRef:AdminPassword"
+                                        }
+                                    }
+                                },
+                                "protectedSettings": {
+                                    "Items": {
+                                        "AdminPassword": "[parameters('existingAdminPassword')]"
+                                    }
                                 }
                             }
                         },
-                        "protectedSettings": {
-                            "Items": {
-                                "AdminPassword": "[parameters('existingAdminPassword')]"
+                        {
+                            "name": "customscript",
+                            "properties": {
+                                "publisher": "Microsoft.Compute",
+                                "type": "CustomScriptExtension",
+                                "typeHandlerVersion": "1.8",
+                                "autoUpgradeMinorVersion": true,
+                                "forceUpdateTag": "[parameters('powershelldscUpdateTagVersion')]",
+                                "settings": {
+                                    "fileUris": [
+                                        "[variables('impersonateScript')]",
+                                        "[concat(parameters('_artifactsLocation'), '/', variables('scriptFolder'), '/', variables('scriptFileName'), parameters('_artifactsLocationSasToken'))]"
+                                    ]
+                                },
+                                "protectedSettings": {
+                                    "commandToExecute": "[concat( 'powershell -noninteractive -executionpolicy bypass -file ', variables('scriptFileName'), variables('scriptParameters'), ' >> script.log 2>&1' )]"
+                                }
                             }
                         }
+                        ]
                     }
-                }
-            ]
-        },
-        {
-            "apiVersion": "2015-06-15",
-            "type": "Microsoft.Compute/virtualMachines/extensions",
-            "name": "cb-vm/customscript",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "rdsh-vm-loop"
-            ],
-            "tags": {
-                "displayName": "script"
-            },
-            "properties": {
-                "publisher": "Microsoft.Compute",
-                "type": "CustomScriptExtension",
-                "typeHandlerVersion": "1.8",
-                "autoUpgradeMinorVersion": true,
-                "settings": {
-                    "fileUris": [
-                        "[variables('impersonateScript')]",
-                        "[concat(parameters('_artifactsLocation'), '/', variables('scriptFolder'), '/', variables('scriptFileName'), parameters('_artifactsLocationSasToken'))]"
-                    ]
-                },
-                "protectedSettings": {
-                    "commandToExecute": "[concat( 'powershell -noninteractive -executionpolicy bypass -file ', variables('scriptFileName'), variables('scriptParameters'), ' >> script.log 2>&1' )]"
                 }
             }
         }
