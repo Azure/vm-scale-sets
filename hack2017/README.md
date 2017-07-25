@@ -23,5 +23,11 @@ Initially the files in the project are for VMs in Availability sets.
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
+### Deploy template with one extension - sessionhost
+
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fhack2017%2Ftest-oneextension.json" target="_blank">
+    <img src="http://azuredeploy.net/deploybutton.png"/>
+</a>
+
 
 
