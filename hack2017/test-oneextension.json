@@ -48,13 +48,6 @@
                 "description": "Domain name of the exisiting RDS deployment"
             }
         },
-        "ouPath": {
-            "type": "string",
-            "defaultValue": "",
-            "metadata": {
-                "description": "Specifies an organizational unit (OU) for the domain account. Enter the full distinguished name of the OU in quotation marks. Example: 'OU=testOU; DC=domain; DC=Domain; DC=com"
-            }
-        },
         "existingAdminUsername": {
             "type": "string",
             "metadata": {
@@ -203,10 +196,9 @@
                                 "autoUpgradeMinorVersion": true,
                                 "settings": {
                                     "Name": "[parameters('existingDomainName')]",
-                                    "OUPath": "[parameters('ouPath')]",
                                     "User": "[concat(parameters('existingDomainName'), variables('slash'), parameters('existingAdminUsername'))]",
                                     "Restart": "true",
-                                    "Options": 1
+                                    "Options": 3
                                 },
                                 "protectedsettings": {
                                     "Password": "[parameters('existingAdminPassword')]"
