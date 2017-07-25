@@ -86,7 +86,7 @@
             "metadata": {
                 "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
             },
-            "defaultValue": "https://raw.githubusercontent.com/azure/vm-scale-sets/master/hack2017/"
+            "defaultValue": "https://raw.githubusercontent.com/azure/vm-scale-sets/master/hack2017"
         },
         "_artifactsLocationSasToken": {
             "type": "securestring",
@@ -115,7 +115,8 @@
         "namingInfix": "[toLower(substring(concat(parameters('scaleSetName'), uniqueString(resourceGroup().id)), 0, 9))]",
         "nicName": "[concat(variables('namingInfix'), '-nic')]",
         "ipConfigName": "[concat(variables('namingInfix'), 'ipconfig')]",
-        "imageName": "[concat(parameters('scaleSetName'), 'img')]"
+        "imageName": "[concat(parameters('scaleSetName'), 'img')]",
+        "slash": "\\"
     },
     "resources": [
         {
@@ -183,6 +184,28 @@
 				            }
 			            }
 			            ]
+                    },
+                    "extensionProfile": {
+                        "extensions": [
+                        {
+                            "name": "joindomain",
+                            "properties": {
+                                "publisher": "Microsoft.Compute",
+                                "type": "JsonADDomainExtension",
+                                "typeHandlerVersion": "1.3",
+                                "autoUpgradeMinorVersion": true,
+                                "settings": {
+                                    "Name": "[parameters('existingDomainName')]",
+                                    "User": "[concat(parameters('existingDomainName'), variables('slash'), parameters('existingAdminUsername'))]",
+                                    "Restart": "true",
+                                    "Options": 3
+                                },
+                                "protectedsettings": {
+                                    "Password": "[parameters('existingAdminPassword')]"
+                                }
+                            }
+                        }
+                        ]
                     }
                 }
             }
