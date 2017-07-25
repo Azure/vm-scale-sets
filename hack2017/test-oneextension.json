@@ -183,10 +183,9 @@
 				            }
 			            }
 			            ]
-                    }
-                },
-                "extensionProfile": {
-                   "extensions": [
+                    },
+                    "extensionProfile": {
+                        "extensions": [
                         {
                             "name": "sessionhost",
                             "properties": {
@@ -212,7 +211,8 @@
                                 }
                             }
                         }
-                    ]
+                        ]
+                    }
                 }
             }
         }
