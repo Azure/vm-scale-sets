@@ -86,7 +86,7 @@
             "metadata": {
                 "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
             },
-            "defaultValue": "https://raw.githubusercontent.com/azure/vm-scale-sets/master/hack2017/"
+            "defaultValue": "https://raw.githubusercontent.com/azure/vm-scale-sets/master/hack2017"
         },
         "_artifactsLocationSasToken": {
             "type": "securestring",
@@ -184,6 +184,35 @@
 			            }
 			            ]
                     }
+                },
+                "extensionProfile": {
+                   "extensions": [
+                        {
+                            "name": "sessionhost",
+                            "properties": {
+                                "publisher": "Microsoft.Powershell",
+                                "type": "DSC",
+                                "typeHandlerVersion": "2.9",
+                                "autoUpgradeMinorVersion": true,
+                                "settings": {
+                                    "ModulesUrl": "[concat(parameters('_artifactsLocation'),'/DSC/Configuration.zip', parameters('_artifactsLocationSasToken'))]",
+                                    "ConfigurationFunction": "Configuration.ps1\\SessionHost",
+                                    "Properties": {
+                                        "DomainName": "[parameters('existingDomainName')]",
+                                        "AdminCreds": {
+                                            "UserName": "[parameters('existingAdminUsername')]",
+                                            "Password": "PrivateSettingsRef:AdminPassword"
+                                        }
+                                    }
+                                },
+                                "protectedSettings": {
+                                    "Items": {
+                                        "AdminPassword": "[parameters('existingAdminPassword')]"
+                                    }
+                                }
+                            }
+                        }
+                    ]
                 }
             }
         }
