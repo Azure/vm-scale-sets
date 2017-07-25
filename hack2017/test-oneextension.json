@@ -115,7 +115,8 @@
         "namingInfix": "[toLower(substring(concat(parameters('scaleSetName'), uniqueString(resourceGroup().id)), 0, 9))]",
         "nicName": "[concat(variables('namingInfix'), '-nic')]",
         "ipConfigName": "[concat(variables('namingInfix'), 'ipconfig')]",
-        "imageName": "[concat(parameters('scaleSetName'), 'img')]"
+        "imageName": "[concat(parameters('scaleSetName'), 'img')]",
+        "slash": "\\"
     },
     "resources": [
         {
@@ -195,7 +196,7 @@
                                 "autoUpgradeMinorVersion": true,
                                 "settings": {
                                     "Name": "[parameters('existingDomainName')]",
-                                    "User": "[concat(parameters('existingDomainName'), '\\', parameters('existingAdminUsername'))]",
+                                    "User": "[concat(parameters('existingDomainName'), variables('slash'), parameters('existingAdminUsername'))]",
                                     "Restart": "true",
                                     "Options": 3
                                 },
