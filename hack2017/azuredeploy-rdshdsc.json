@@ -29,13 +29,6 @@
             },
             "defaultValue": "Standard_D2_v2"
         },
-        "userLogoffTimeoutInMinutes": {
-            "type": "int",
-            "defaultValue": 60,
-            "metadata": {
-                "description": "Timeout before forced user logoff from old RDSH instances"
-            }
-        },
         "existingDomainName": {
             "type": "string",
             "metadata": {

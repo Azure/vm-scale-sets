@@ -14,9 +14,6 @@
         "rdshVmSize": {
             "value": "Standard_D2_v2"
         },
-        "userLogoffTimeoutInMinutes": {
-            "value": 60
-        },
         "existingAdminUsername": {
             "value": "GEN-USER"
         },
