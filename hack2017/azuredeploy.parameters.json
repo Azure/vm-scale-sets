@@ -14,9 +14,6 @@
         "rdshTemplateImageUri": {
             "value": "https://rdsstorage.blob.core.windows.net/vhds/MyWindowServerOSImage.vhd"
         },
-        "rdshUpdateIteration": {
-            "value": "a"
-        },
         "userLogoffTimeoutInMinutes": {
             "value": 60
         },
@@ -27,7 +24,7 @@
             "value": "subnet"
         },
         "scaleSetName": {
-            "value": "rdshvmss"
+            "value": "rdsvmss"
         }
     }
 }
