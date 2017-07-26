@@ -187,9 +187,7 @@
                                         "AdminCreds": {
                                             "UserName": "[parameters('existingAdminUsername')]",
                                             "Password": "PrivateSettingsRef:AdminPassword"
-                                        },
-                                        "ConnectionBroker": "[parameters('connectionBrokerFqdn')]",
-                                        "CollectionName": "[parameters('existingRdshCollectionName')]"
+                                        }
                                     }
                                 },
                                 "protectedSettings": {
