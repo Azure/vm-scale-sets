@@ -15,12 +15,6 @@
                 "description": "URI for the template VHD to use for RDSH instances. For example, https://rdsstorage.blob.core.windows.net/vhds/MyWindowServerOSImage.vhd"
             }
         },
-        "rdshUpdateIteration": {
-            "type": "string",
-            "metadata": {
-                "description": "A unique designator representing update iteration; newly created RDSH instances will have their names in the form: 'rdsh-&lt;index&gt;&lt;iteration&gt;"
-            }
-        },
         "rdshNumberOfInstances": {
             "type": "int",
             "defaultValue": 2,
@@ -97,21 +91,6 @@
         }
     },
     "variables": {
-        "iteration": "[toLower(parameters('rdshUpdateIteration'))]",
-        "storageAccountName": "[split( split( parameters('rdshTemplateImageUri'), '/')[2], '.' )[0]]",
-        "impersonateScript": "https://gallery.technet.microsoft.com/scriptcenter/Impersonate-a-User-9bfeff82/file/127189/1/New-ImpersonateUser.ps1",
-        "p": {
-            "domain": "[concat(' -domain ', parameters('existingDomainName'))]",
-            "user": "[concat(' -username ', parameters('existingAdminUsername'))]",
-            "pwd": "[concat(' -password ', parameters('existingAdminPassword'))]",
-            "collection": "[concat(' -collection \"', parameters('existingRdshCollectionName'), '\"')]",
-            "iteration": "[concat(' -iteration ', toLower(parameters('rdshUpdateIteration')))]",
-            "servers": "[concat(' -nServers ', parameters('rdshNumberOfInstances'))]",
-            "timeout": "[concat(' -nTimeoutMinutes ', parameters('userLogoffTimeoutInMinutes'))]"
-        },
-        "scriptParameters": "[concat(variables('p').domain, variables('p').user, variables('p').pwd, variables('p').collection, variables('p').iteration, variables('p').servers, variables('p').timeout)]",
-        "scriptFolder": "Scripts",
-        "scriptFileName": "Script.ps1",
         "namingInfix": "[toLower(substring(concat(parameters('scaleSetName'), uniqueString(resourceGroup().id)), 0, 9))]",
         "nicName": "[concat(variables('namingInfix'), '-nic')]",
         "ipConfigName": "[concat(variables('namingInfix'), 'ipconfig')]",
