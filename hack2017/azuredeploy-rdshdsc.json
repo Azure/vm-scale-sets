@@ -54,6 +54,12 @@
                 "description": "Domain administrator password"
             }
         },
+        "connectionBrokerFqdn": {
+            "type": "string",
+            "metadata" : {
+                "description": "Full server name of the RDS Connection Broker, example broker.contoso.com"
+            }
+        },
         "existingVnetName": {
             "type": "string",
             "defaultValue": "vnet",
@@ -181,7 +187,9 @@
                                         "AdminCreds": {
                                             "UserName": "[parameters('existingAdminUsername')]",
                                             "Password": "PrivateSettingsRef:AdminPassword"
-                                        }
+                                        },
+                                        "ConnectionBroker": "[parameters('connectionBrokerFqdn')]",
+                                        "CollectionName": "[parameters('existingRdshCollectionName')]"
                                     }
                                 },
                                 "protectedSettings": {
