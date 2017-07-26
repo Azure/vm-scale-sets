@@ -174,13 +174,15 @@
                                 "autoUpgradeMinorVersion": true,
                                 "settings": {
                                     "ModulesUrl": "[concat(parameters('_artifactsLocation'),'/DSC/Configuration.zip', parameters('_artifactsLocationSasToken'))]",
-                                    "ConfigurationFunction": "Configuration.ps1\\SessionHost",
+                                    "ConfigurationFunction": "Configuration.ps1\\SessionHostAdd",
                                     "Properties": {
                                         "DomainName": "[parameters('existingDomainName')]",
                                         "AdminCreds": {
                                             "UserName": "[parameters('existingAdminUsername')]",
                                             "Password": "PrivateSettingsRef:AdminPassword"
-                                        }
+                                        },
+                                        "ConnectionBroker": "[parameters('connectionBrokerFqdn')]",
+                                        "CollectionName": "[parameters('existingRdshCollectionName')]"
                                     }
                                 },
                                 "protectedSettings": {
