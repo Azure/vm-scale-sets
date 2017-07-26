@@ -5,18 +5,27 @@
         "existingDomainName": {
             "value": "mydomain.local"
         },
+        "rdshTemplateImageUri": {
+            "value": "https://rdsstorage.blob.core.windows.net/vhds/MyWindowServerOSImage.vhd"
+        },
+        "rdshNumberOfInstances": {
+            "value": 2
+        },
+        "rdshVmSize": {
+            "value": "Standard_D2_v2"
+        },
+        "userLogoffTimeoutInMinutes": {
+            "value": 60
+        },
         "existingAdminUsername": {
             "value": "GEN-USER"
         },
         "existingAdminPassword": {
             "value": "GEN-PASSWORD"
         },
-        "rdshTemplateImageUri": {
-            "value": "https://rdsstorage.blob.core.windows.net/vhds/MyWindowServerOSImage.vhd"
-        },
-        "userLogoffTimeoutInMinutes": {
-            "value": 60
-        },
+        "connectionBrokerFqdn": {
+            "value": "broker.rdsvmss.com"
+        },
         "existingVnetName": {
             "value": "vnet"
         },
