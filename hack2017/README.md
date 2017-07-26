@@ -11,15 +11,21 @@ Initially the files in the project are for VMs in Availability sets.
 
 - Currently in progress: testing
 
-### Deploy template with one extension - join domain
+### Deploy scale set with one extension - join domain
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fhack2017%2Fazuredeploy-joindomain.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
-### Deploy template with one extension - join domain and sessionhost
+### Deploy scale set with one extension - join domain and sessionhost
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fhack2017%2Fazuredeploy-rdshdsc.json" target="_blank">
+    <img src="http://azuredeploy.net/deploybutton.png"/>
+</a>
+
+### Deploy scale set with no extensions into existing vnet/subnet
+
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fhack2017%2F201-vmss-win2016-existing-vnet-.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
