@@ -1,0 +1,6 @@
+[ClassVersion("1.1.0.0"), FriendlyName("xRDSessionHostSelfAdd")]
+class MSFT_xRDSessionHostSelfAdd : OMI_BaseResource
+{
+    [write, Description("Name of the RD Connection Broker.")] string ConnectionBroker;
+    [key, Description("Specifies a name for the session collection.")] string CollectionName;
+};
