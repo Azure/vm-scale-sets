@@ -81,10 +81,12 @@ function Set-TargetResource
                 $collectionExists = $true
             }
     }
+    
+    write-verbose "adding local server to RDS deployment"
+    Add-RDServer -Server $localhost -Role RDS-RD-SERVER -ConnectionBroker $ConnectionBroker
 
     if ($collectionExists){
         write-verbose "Simply adding local server to RD Session collection '$CollectionName'"
-        Add-RDServer -Server $localhost -Role RDS-RD-SERVER -ConnectionBroker $ConnectionBroker
         Add-RDSessionHost @PSBoundParameters -SessionHost $localhost
     }
     else {
