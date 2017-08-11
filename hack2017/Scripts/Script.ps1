@@ -101,7 +101,7 @@ param(
 	#  from .\New-ImpersonateUser.ps1 in gallery https://gallery.technet.microsoft.com/scriptcenter/Impersonate-a-User-9bfeff82
 	#
 	$ImpersonatedUser = @{}
-	log "impersonating as '$adminUsername'..."
+	log "impersonating as '$UserName'..."
 	Add-Type -Namespace Import -Name Win32 -MemberDefinition @'
 			[DllImport("advapi32.dll", SetLastError = true)]
 			public static extern bool LogonUser(string user, string domain, string password, int logonType, int logonProvider, out IntPtr token);
