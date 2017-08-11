@@ -111,7 +111,7 @@ param(
 '@
 
 	$tokenHandle = 0
-	$returnValue = [Import.Win32]::LogonUser($adminUserName, $adDomainName, $adminPassword, 2, 0, [ref]$tokenHandle)
+	$returnValue = [Import.Win32]::LogonUser($userName, $domain, $password, 2, 0, [ref]$tokenHandle)
 
 	if (!$returnValue)
 	{
