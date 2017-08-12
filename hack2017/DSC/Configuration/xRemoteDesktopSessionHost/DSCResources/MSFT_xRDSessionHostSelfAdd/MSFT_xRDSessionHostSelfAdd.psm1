@@ -83,7 +83,7 @@ function Set-TargetResource
     }
     else {
         write-verbose "calling New-RdSessionCollection cmdlet..."
-        if(-not (New-RDSessionCollection @PSBoundParameters -SessionHost $localhost -ErrorAction Continue)){
+        if(-not (New-RDSessionCollection @PSBoundParameters -SessionHost $localhost -ErrorAction SilentlyContinue)){
            write-verbose "retry adding local server to RD Session collection '$CollectionName'"
            Add-RDSessionHost @PSBoundParameters -SessionHost $localhost
         }
