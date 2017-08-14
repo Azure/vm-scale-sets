@@ -74,24 +74,19 @@ function Set-TargetResource
         [string] $CollectionName
     )
 
-    $collectionExists = $false
-    $collections = Get-RDSessionCollection -ConnectionBroker $ConnectionBroker -ea SilentlyContinue| % CollectionName
-    $collections | ForEach-Object {
-            if ($_ -ieq $CollectionName){
-                $collectionExists = $true
-            }
-    }
-    
     write-verbose "adding local server to RDS deployment"
     Add-RDServer -Server $localhost -Role RDS-RD-SERVER -ConnectionBroker $ConnectionBroker
 
-    if ($collectionExists){
+    if(Get-RDSessionCollection -CollectionName $CollectionName -ErrorAction SilentlyContinue){
         write-verbose "Simply adding local server to RD Session collection '$CollectionName'"
         Add-RDSessionHost @PSBoundParameters -SessionHost $localhost
     }
     else {
         write-verbose "calling New-RdSessionCollection cmdlet..."
-        New-RDSessionCollection @PSBoundParameters -SessionHost $localhost
+        if(-not (New-RDSessionCollection @PSBoundParameters -SessionHost $localhost -ErrorAction SilentlyContinue)){
+           write-verbose "retry adding local server to RD Session collection '$CollectionName'"
+           Add-RDSessionHost @PSBoundParameters -SessionHost $localhost
+        }
     }
     
 
