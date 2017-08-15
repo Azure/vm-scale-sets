@@ -6,7 +6,7 @@ This is currently a limited preview - you won't be able to use this feature unle
 
 Sign up for the automatic upgrade and rolling upgrade feature previews [here](https://forms.office.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRynq-GTEl8lLqDPOris8e0JUMU9BQllYT1c5SzlIRlA4UTI0V0FUMDU3MC4u).
 
-Last update: 7/19/17.
+Last update: 8/15/17.
 
 ## Pre-requisites
 Automatic OS upgrades are offered when the following conditions are met:
@@ -85,6 +85,9 @@ Calls to this API will only change the OS disks of your machine if there is a ne
 Note: you can have the OS version set to "latest" in your VMSS properties. However a manually triggered rolling upgrade will only take place after a newer version of the corresponding OS image has been published.
 
 CRP API version is 2017-03-30
+
+## How to manually trigger a rolling reimage
+Sometimes you may want to just re-set your existing scale set to factory settings. For example you have a stateless app and want to trigger the VMs extensions to re-run. As part of this preview, you can trigger a rolling reimage of a scale set with the following REST API call: /virtualMachineScaleSet/<scaleSetName>/osRollingUpgrade?forceReimage=true
 
 ## Manuall rolling upgrade FAQ
 
