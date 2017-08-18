@@ -101,14 +101,14 @@
         "nicName": "[concat(variables('namingInfix'), '-nic')]",
         "ipConfigName": "[concat(variables('namingInfix'), 'ipconfig')]",
         "imageName": "[concat(parameters('scaleSetName'), 'img')]",
-        "slash": "\\"
+        "location": "[resourceGroup().location]"
     },
     "resources": [
         {
             "type": "Microsoft.Compute/images",
             "apiVersion": "2017-03-30",
             "name": "[variables('imageName')]",
-            "location": "[resourceGroup().location]",
+            "location": "[variables('location')]",
             "properties": {
                 "storageProfile": {
                     "osDisk": {
@@ -125,7 +125,7 @@
             "apiVersion": "2017-03-30",
             "type": "Microsoft.Compute/virtualMachineScaleSets",
             "name": "[parameters('scaleSetName')]",
-            "location": "[resourceGroup().location]",
+            "location": "[variables('location')]",
             "dependsOn": [
                 "[concat('Microsoft.Compute/images/', variables('imageName'))]"
             ],
