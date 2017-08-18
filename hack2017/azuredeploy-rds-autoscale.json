@@ -32,7 +32,7 @@
         "cpuScaleThreshold": {
             "type": "int",
             "metadata": {
-                "description": "Average max CPU percent threshold for autoscale"
+                "description": "Average CPU percent threshold for autoscale"
             },
             "defaultValue": "70"
         },
