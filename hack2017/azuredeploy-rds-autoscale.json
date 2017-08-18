@@ -1,0 +1,253 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "existingRdshCollectionName": {
+            "type": "string",
+            "defaultValue": "Desktop Collection",
+            "metadata": {
+                "description": "Name of the RDSH collection to update"
+            }
+        },
+        "rdshTemplateImageUri": {
+            "type": "string",
+            "metadata": {
+                "description": "URI for the template VHD to use for RDSH instances. For example, https://rdsstorage.blob.core.windows.net/vhds/MyWindowServerOSImage.vhd"
+            }
+        },
+        "rdshNumberOfInstances": {
+            "type": "int",
+            "defaultValue": 2,
+            "metadata": {
+                "description": "Number of RD Session Hosts"
+            }
+        },
+        "rdshVmSize": {
+            "type": "string",
+            "metadata": {
+                "description": "The size of the RDSH virtual machines"
+            },
+            "defaultValue": "Standard_D2_v2"
+        },
+        "cpuScaleThreshold": {
+            "type": "int",
+            "metadata": {
+                "description": "Average max CPU percent threshold for autoscale"
+            },
+            "defaultValue": "70"
+        },
+        "existingDomainName": {
+            "type": "string",
+            "metadata": {
+                "description": "Domain name of the exisiting RDS deployment"
+            }
+        },
+        "existingAdminUsername": {
+            "type": "string",
+            "metadata": {
+                "description": "The name of administrator in the existing RDS deployment"
+            }
+        },
+        "existingAdminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Domain administrator password"
+            }
+        },
+        "connectionBrokerFqdn": {
+            "type": "string",
+            "metadata": {
+                "description": "Full server name of the RDS Connection Broker, example broker.contoso.com"
+            }
+        },
+        "existingVnetName": {
+            "type": "string",
+            "defaultValue": "vnet",
+            "metadata": {
+                "description": "VNET name"
+            }
+        },
+        "existingSubnetName": {
+            "type": "string",
+            "defaultValue": "Subnet",
+            "metadata": {
+                "description": "Subnet name"
+            }
+        },
+        "scaleSetName": {
+            "type": "string",
+            "defaultValue": "rdsvmss",
+            "metadata": {
+                "description": "Scale set for new RDSH instances"
+            }
+        },
+        "_artifactsLocation": {
+            "type": "string",
+            "metadata": {
+                "description": "The base URI where artifacts required by this template are located. When the template is deployed using the accompanying scripts, a private location in the subscription will be used and this value will be automatically generated."
+            },
+            "defaultValue": "https://raw.githubusercontent.com/azure/vm-scale-sets/master/hack2017"
+        },
+        "_artifactsLocationSasToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The sasToken required to access _artifactsLocation.  When the template is deployed using the accompanying scripts, a sasToken will be automatically generated."
+            },
+            "defaultValue": ""
+        }
+    },
+    "variables": {
+        "namingInfix": "[toLower(substring(concat(parameters('scaleSetName'), uniqueString(resourceGroup().id)), 0, 9))]",
+        "nicName": "[concat(variables('namingInfix'), '-nic')]",
+        "ipConfigName": "[concat(variables('namingInfix'), 'ipconfig')]",
+        "imageName": "[concat(parameters('scaleSetName'), 'img')]",
+        "slash": "\\"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Compute/images",
+            "apiVersion": "2017-03-30",
+            "name": "[variables('imageName')]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "storageProfile": {
+                    "osDisk": {
+                        "osType": "Windows",
+                        "osState": "Generalized",
+                        "blobUri": "[parameters('rdshTemplateImageUri')]",
+                        "caching": "ReadWrite",
+                        "storageAccountType": "Standard_LRS"
+                    }
+                }
+            }
+        },
+        {
+            "apiVersion": "2017-03-30",
+            "type": "Microsoft.Compute/virtualMachineScaleSets",
+            "name": "[parameters('scaleSetName')]",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Compute/images/', variables('imageName'))]"
+            ],
+            "sku": {
+                "name": "[parameters('rdshVmSize')]",
+                "tier": "Standard",
+                "capacity": "[parameters('rdshNumberOfInstances')]"
+            },
+            "properties": {
+                "overprovision": "false",
+                "upgradePolicy": {
+                    "mode": "Manual"
+                },
+                "virtualMachineProfile": {
+                    "storageProfile": {
+                        "imageReference": {
+                            "id": "[resourceId('Microsoft.Compute/images', variables('imageName'))]"
+                        }
+                    },
+                    "osProfile": {
+                        "computerNamePrefix": "[variables('namingInfix')]",
+                        "adminUsername": "[parameters('existingAdminUsername')]",
+                        "adminPassword": "[parameters('existingAdminPassword')]"
+                    },
+                    "networkProfile": {
+                        "networkInterfaceConfigurations": [
+                            {
+                                "name": "[variables('nicName')]",
+                                "properties": {
+                                    "primary": "true",
+                                    "ipConfigurations": [
+                                        {
+                                            "name": "[variables('ipConfigName')]",
+                                            "properties": {
+                                                "subnet": {
+                                                    "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/virtualNetworks/', parameters('existingVnetName'), '/subnets/', parameters('existingSubnetName'))]"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ]
+                    },
+                    "extensionProfile": {
+                        "extensions": [
+                            {
+                                "name": "sessionhost",
+                                "properties": {
+                                    "publisher": "Microsoft.Powershell",
+                                    "type": "DSC",
+                                    "typeHandlerVersion": "2.11",
+                                    "autoUpgradeMinorVersion": true,
+                                    "settings": {
+                                        "ModulesUrl": "[concat(parameters('_artifactsLocation'),'/DSC/Configuration.zip', parameters('_artifactsLocationSasToken'))]",
+                                        "ConfigurationFunction": "Configuration.ps1\\SessionHostAdd",
+                                        "Properties": {
+                                            "DomainName": "[parameters('existingDomainName')]",
+                                            "AdminCreds": {
+                                                "UserName": "[parameters('existingAdminUsername')]",
+                                                "Password": "PrivateSettingsRef:AdminPassword"
+                                            },
+                                            "ConnectionBroker": "[parameters('connectionBrokerFqdn')]",
+                                            "CollectionName": "[parameters('existingRdshCollectionName')]"
+                                        }
+                                    },
+                                    "protectedSettings": {
+                                        "Items": {
+                                            "AdminPassword": "[parameters('existingAdminPassword')]"
+                                        }
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Insights/autoscaleSettings",
+            "apiVersion": "2016-08-01",
+            "name": "autoscalehost",
+            "location": "[variables('location')]",
+            "dependsOn": [
+                "[concat('Microsoft.Compute/virtualMachineScaleSets/', parameters('scaleSetName'))]"
+            ],
+            "properties": {
+                "name": "autoscalehost",
+                "targetResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', parameters('vmSSName'))]",
+                "enabled": true,
+                "profiles": [
+                    {
+                        "name": "Profile1",
+                        "capacity": {
+                            "minimum": "1",
+                            "maximum": "10",
+                            "default": "1"
+                        },
+                        "rules": [
+                            {
+                                "metricTrigger": {
+                                    "metricName": "Percentage CPU",
+                                    "metricNamespace": "",
+                                    "metricResourceUri": "[concat('/subscriptions/',subscription().subscriptionId, '/resourceGroups/',  resourceGroup().name, '/providers/Microsoft.Compute/virtualMachineScaleSets/', parameters('scaleSetName'))]",
+                                    "timeGrain": "PT1M",
+                                    "statistic": "Average",
+                                    "timeWindow": "PT5M",
+                                    "timeAggregation": "Average",
+                                    "operator": "GreaterThan",
+                                    "threshold": "parameters('cpuScaleThreshold')"
+                                },
+                                "scaleAction": {
+                                    "direction": "Increase",
+                                    "type": "ChangeCount",
+                                    "value": "1",
+                                    "cooldown": "PT1M"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}
