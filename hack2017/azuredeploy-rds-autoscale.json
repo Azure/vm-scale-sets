@@ -206,7 +206,7 @@
         },
         {
             "type": "Microsoft.Insights/autoscaleSettings",
-            "apiVersion": "2016-08-01",
+            "apiVersion": "2015-04-01",
             "name": "autoscalehost",
             "location": "[variables('location')]",
             "dependsOn": [
