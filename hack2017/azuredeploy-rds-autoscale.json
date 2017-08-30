@@ -34,7 +34,7 @@
             "metadata": {
                 "description": "Average CPU percent threshold for autoscale"
             },
-            "defaultValue": "70"
+            "defaultValue": 70
         },
         "existingDomainName": {
             "type": "string",
