@@ -235,7 +235,7 @@
                                     "timeWindow": "PT5M",
                                     "timeAggregation": "Average",
                                     "operator": "GreaterThan",
-                                    "threshold": "parameters('cpuScaleThreshold')"
+                                    "threshold": "[parameters('cpuScaleThreshold')]"
                                 },
                                 "scaleAction": {
                                     "direction": "Increase",
