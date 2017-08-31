@@ -2,18 +2,24 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "existingDomainName": {
-            "value": "mydomain.local"
+        "existingRdshCollectionName": {
+            "value": "Scale Set 1"
         },
         "rdshTemplateImageUri": {
             "value": "https://rdsstorage.blob.core.windows.net/vhds/MyWindowServerOSImage.vhd"
         },
-        "rdshNumberOfInstances": {
-            "value": 2
-        },
+        "rdshNumberOfInstances": {
+            "value": 2
+        },
         "rdshVmSize": {
-            "value": "Standard_D2_v2"
-        },
+            "value": "Standard_D2_v2"
+        },
+        "cpuScaleThreshold": {
+            "value": 30
+        },
+        "existingDomainName": {
+            "value": "rdsvmss.com"
+        },
         "existingAdminUsername": {
             "value": "GEN-USER"
         },
@@ -21,8 +27,8 @@
             "value": "GEN-PASSWORD"
         },
         "connectionBrokerFqdn": {
-            "value": "broker.rdsvmss.com"
-        },
+            "value": "broker.rdsvmss.com"
+        },
         "existingVnetName": {
             "value": "vnet"
         },
@@ -31,6 +37,12 @@
         },
         "scaleSetName": {
             "value": "rdsvmss"
+        },
+        "_artifactsLocation": {
+            "value": "https://raw.githubusercontent.com/azure/vm-scale-sets/master/hack2017"
+        },
+        "_artifactsLocationSasToken": {
+            "value": ""
         }
     }
 }
