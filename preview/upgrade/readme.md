@@ -96,7 +96,7 @@ A load-balancer probe isn't required for automatic OS upgrades, but it is highly
 
 ## How to manually trigger a rolling upgrade
 
-1) Make a post request to /subscriptions/<subId>/resourceGroups/<rgName>/Microsoft.Compute/virtualMachineScaleSets/<vmssName>/osRollingUpgrade 
+1) Make a post request to `/subscriptions/<subId>/resourceGroups/<rgName>/Microsoft.Compute/virtualMachineScaleSets/<vmssName>/osRollingUpgrade` 
 Calls to this API will only change the OS disks of your machine if there is a new OS to update your VMs to, and it will conform to the rolling upgrade policies you specify in the rollingUpgradePolicy section of the vmss configuration.
 
 2) Change the OS version in your VMSS.
@@ -106,7 +106,7 @@ Note: you can have the OS version set to "latest" in your VMSS properties. Howev
 CRP API version is 2017-03-30
 
 ## How to manually trigger a rolling reimage
-Sometimes you may want to just re-set your existing scale set to factory settings. For example you have a stateless app and want to trigger the VMs extensions to re-run. As part of this preview, you can trigger a rolling reimage of a scale set with the following REST API call: /virtualMachineScaleSet/<scaleSetName>/osRollingUpgrade?forceReimage=true
+Sometimes you may want to just re-set your existing scale set to factory settings. For example you have a stateless app and want to trigger the VMs extensions to re-run. As part of this preview, you can trigger a rolling reimage of a scale set with the following REST API call: `/virtualMachineScaleSet/<scaleSetName>/osRollingUpgrade?forceReimage=true`
 
 ## Manual rolling upgrade FAQ
 
@@ -144,7 +144,7 @@ There is no in built mechanism for draining, it is up to your app to stop and st
 
 ## Example automatic rolling upgrade status
 
-GET on /subscriptions/subscription_id/resourceGroups/resource_group/providers/Microsoft.Compute/virtualMachineScaleSets/vmss_name/rollingUpgrades/latest?api-version=2017-03-30
+GET on `/subscriptions/subscription_id/resourceGroups/resource_group/providers/Microsoft.Compute/virtualMachineScaleSets/vmss_name/rollingUpgrades/latest?api-version=2017-03-30`
 
 ```
 {
