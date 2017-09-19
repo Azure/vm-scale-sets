@@ -50,7 +50,7 @@ Automatic OS upgrades are offered when the following conditions are met:
 - Syntax
 ```
 "upgradePolicy": {
-    "mode": "Rolling", // 
+    "mode": "Rolling", // Must be "Rolling" for manual upgrades; can be anything for automatic OS upgrades
     "automaticOSUpgrade": "true" or "false",
 	"rollingUpgradePolicy": {
 		"maxBatchInstancePercent": 20,
