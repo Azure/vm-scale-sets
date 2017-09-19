@@ -70,11 +70,12 @@
       "properties": {
         "singlePlacementGroup": "false",
         "upgradePolicy": {
-            "mode": "Rolling",
+            "mode": "Automatic",
             "automaticOSUpgrade": "true",
           "rollingUpgradePolicy": {
-            "batchInstancePercent": 20,
-            "maxUnhealthyUpgradedInstanceCount": 0,
+            "maxBatchInstancePercent": 20,
+            "maxUnhealthyInstancePercent": 20,
+            "maxUnhealthyUpgradedInstancePercent": "0",
             "pauseTimeBetweenBatches": "PT0S"
           }
         },
