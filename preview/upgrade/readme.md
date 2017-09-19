@@ -79,13 +79,15 @@ The maximum percentage of upgraded virtual machine instances that can be found t
 The default value for this parameter is 20.
 
 ## Adding a load-balancer probe for determining health of the rolling upgrade
-Before the VMSS can be created or moved into rolling upgrade mode, a load-balancer probe used to determine the VM health must be added.
+Before the VMSS can be created or moved into rolling upgrade mode, a load-balancer probe used to determine VM instance health must be added.
 
-As a best practice, a new load-balancer probe should be created explicitly for VMSS health. The same endpoint for an existing HTTP probe or TCP probe may be used, but a health probe may require different behavior than that of a traditional load-balancer probe. For example, a traditional load-balancer probe may return unhealthy if the load on the instance is too high, whereas that may not be appropriate for determining the instance health during a rolling upgrade. The probe should be set up to have a high probing rate. The probe can be referenced in the networkProfile of the VMSS:
+As a best practice, a new load-balancer probe should be created explicitly for VMSS health. The same endpoint for an existing HTTP probe or TCP probe may be used, but a health probe may require different behavior than that of a traditional load-balancer probe. For example, a traditional load-balancer probe may return unhealthy if the load on the instance is too high, whereas that may not be appropriate for determining the instance health during a rolling upgrade. The probe should also be set up to have a high probing rate.
+
+The load-balancer probe can be referenced in the networkProfile of the VMSS and can be associated with either an internal or public facing load-balancer:
 ```
 "networkProfile": {
   "healthProbe" : {
-    "id": "[concat(variables('lbId'), '/probes/', variables('webProbeName'))]"
+    "id": "[concat(variables('lbId'), '/probes/', variables('sshProbeName'))]"
   },
   "networkInterfaceConfigurations":
   ...
