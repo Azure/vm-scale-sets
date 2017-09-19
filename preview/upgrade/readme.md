@@ -139,7 +139,7 @@ There is no in built mechanism for draining, it is up to your app to stop and st
 
 ## Example automatic rolling upgrade status
 
-GET on /subscriptions/subscription_id/resourceGroups/resource_group/providers/Microsoft.Compute/virtualMachineScaleSets/vmss_name/rollingUpgrades/latest?api-version=2-17-03-30
+GET on /subscriptions/subscription_id/resourceGroups/resource_group/providers/Microsoft.Compute/virtualMachineScaleSets/vmss_name/rollingUpgrades/latest?api-version=2017-03-30
 
 ```
 {
