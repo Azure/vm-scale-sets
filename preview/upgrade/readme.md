@@ -78,10 +78,8 @@ __maxUnhealthyUpgradedInstancePercent__ –
 The maximum percentage of upgraded virtual machine instances that can be found to be in an unhealthy state. This check will happen after each batch is upgraded. If this percentage is ever exceeded, the rolling update aborts.
 The default value for this parameter is 20.
 
-## Adding a load-balancer probe for determining health of the rolling upgrade
-Before the VMSS can be created or moved into rolling upgrade mode, a load-balancer probe used to determine the VM health must be added.
-
-As a best practice, a new load-balancer probe should be created explicitly for VMSS health. The same endpoint for an existing HTTP probe or TCP probe may be used, but a health probe may require different behavior than that of a traditional load-balancer probe. For example, a traditional load-balancer probe may return unhealthy if the load on the instance is too high, whereas that may not be appropriate for determining the instance health during a rolling upgrade. The probe should be set up to have a high probing rate. The probe can be referenced in the networkProfile of the VMSS:
+## Adding an SLB probe for health
+Before the VMSS can be created or moved into rolling upgrade mode, an SLB probe used to determine the VM health must be added. As a best practice, a new SLB probe should be created explicitly for VMSS health with a high probing rate. The probe can be referenced in the networkProfile of the VMSS:
 ```
 "networkProfile": {
   "healthProbe" : {
@@ -90,11 +88,10 @@ As a best practice, a new load-balancer probe should be created explicitly for V
   "networkInterfaceConfigurations":
   ...
 ```
-A load-balancer probe isn't required for automatic OS upgrades, but it is highly recommended.
 
 ## How to manually trigger a rolling upgrade
 
-1) Make a post request to /subscriptions/<subId>/resourceGroups/<rgName>/Microsoft.Compute/virtualMachineScaleSets/<vmssName>/osRollingUpgrade 
+1) Make a post request to `/subscriptions/<subId>/resourceGroups/<rgName>/Microsoft.Compute/virtualMachineScaleSets/<vmssName>/osRollingUpgrade` 
 Calls to this API will only change the OS disks of your machine if there is a new OS to update your VMs to, and it will conform to the rolling upgrade policies you specify in the rollingUpgradePolicy section of the vmss configuration.
 
 2) Change the OS version in your VMSS.
@@ -104,7 +101,7 @@ Note: you can have the OS version set to "latest" in your VMSS properties. Howev
 CRP API version is 2017-03-30
 
 ## How to manually trigger a rolling reimage
-Sometimes you may want to just re-set your existing scale set to factory settings. For example you have a stateless app and want to trigger the VMs extensions to re-run. As part of this preview, you can trigger a rolling reimage of a scale set with the following REST API call: /virtualMachineScaleSet/<scaleSetName>/osRollingUpgrade?forceReimage=true
+Sometimes you may want to just re-set your existing scale set to factory settings. For example you have a stateless app and want to trigger the VMs extensions to re-run. As part of this preview, you can trigger a rolling reimage of a scale set with the following REST API call: `/virtualMachineScaleSet/<scaleSetName>/osRollingUpgrade?forceReimage=true`
 
 ## Manual rolling upgrade FAQ
 
@@ -142,7 +139,7 @@ There is no in built mechanism for draining, it is up to your app to stop and st
 
 ## Example automatic rolling upgrade status
 
-GET on /subscriptions/subscription_id/resourceGroups/resource_group/providers/Microsoft.Compute/virtualMachineScaleSets/vmss_name/rollingUpgrades/latest?api-version=2017-03-30
+GET on `/subscriptions/subscription_id/resourceGroups/resource_group/providers/Microsoft.Compute/virtualMachineScaleSets/vmss_name/rollingUpgrades/latest?api-version=2017-03-30`
 
 ```
 {
