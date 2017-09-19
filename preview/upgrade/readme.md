@@ -75,7 +75,7 @@ The maximum percentage of the total virtual machine instances in the scale set t
 The default value for this parameter is 20.
 
 __maxUnhealthyUpgradedInstancePercent__ – 
-he maximum percentage of upgraded virtual machine instances that can be found to be in an unhealthy state. This check will happen after each batch is upgraded. If this percentage is ever exceeded, the rolling update aborts.
+The maximum percentage of upgraded virtual machine instances that can be found to be in an unhealthy state. This check will happen after each batch is upgraded. If this percentage is ever exceeded, the rolling update aborts.
 The default value for this parameter is 20.
 
 ## Adding an SLB probe for health
