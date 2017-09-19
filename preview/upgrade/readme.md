@@ -78,8 +78,10 @@ __maxUnhealthyUpgradedInstancePercent__ –
 The maximum percentage of upgraded virtual machine instances that can be found to be in an unhealthy state. This check will happen after each batch is upgraded. If this percentage is ever exceeded, the rolling update aborts.
 The default value for this parameter is 20.
 
-## Adding an SLB probe for health
-Before the VMSS can be created or moved into rolling upgrade mode, an SLB probe used to determine the VM health must be added. As a best practice, a new SLB probe should be created explicitly for VMSS health with a high probing rate. The probe can be referenced in the networkProfile of the VMSS:
+## Adding a load-balancer probe for determining health of the rolling upgrade
+Before the VMSS can be created or moved into rolling upgrade mode, a load-balancer probe used to determine the VM health must be added.
+
+As a best practice, a new load-balancer probe should be created explicitly for VMSS health. The same endpoint for an existing HTTP probe or TCP probe may be used, but a health probe may require different behavior than that of a traditional load-balancer probe. For example, a traditional load-balancer probe may return unhealthy if the load on the instance is too high, whereas that may not be appropriate for determining the instance health during a rolling upgrade. The probe should be set up to have a high probing rate. The probe can be referenced in the networkProfile of the VMSS:
 ```
 "networkProfile": {
   "healthProbe" : {
@@ -88,6 +90,7 @@ Before the VMSS can be created or moved into rolling upgrade mode, an SLB probe 
   "networkInterfaceConfigurations":
   ...
 ```
+A load-balancer probe isn't required for automatic OS upgrades, but it is highly recommended.
 
 ## How to manually trigger a rolling upgrade
 
