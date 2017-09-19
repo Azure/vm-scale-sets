@@ -6,7 +6,7 @@ This is currently a limited preview - you won't be able to use this feature unle
 
 Sign up for the automatic upgrade and rolling upgrade feature previews [here](https://forms.office.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRynq-GTEl8lLqDPOris8e0JUMU9BQllYT1c5SzlIRlA4UTI0V0FUMDU3MC4u).
 
-Last update: 8/15/17.
+Last update: 9/19/17.
 
 ## Pre-requisites
 Automatic OS upgrades are offered when the following conditions are met:
@@ -39,31 +39,31 @@ Automatic OS upgrades are offered when the following conditions are met:
 
 
 ## When automatic upgrade happens
-- Autoamtic OS upgrades are triggered when the publisher for your OS sku releases a new image version.
+- Automatic OS upgrades are triggered when the publisher for your OS sku releases a new image version.
 
 ## How to configure auto-updates
 
 - Sign up for the limited preview 
 
-- Set UpgradePolicy is set to Rolling. 
+- Ensure automaticOSUpgrade is set to true. 
 
 - Syntax
 ```
 "upgradePolicy": {
-    "mode": "Rolling",
+    "mode": "Rolling", // 
     "automaticOSUpgrade": "true" or "false",
 	"rollingUpgradePolicy": {
-		"batchInstancePercent": 20,
-		"maxUnhealthyUpgradedInstanceCount": 0,
+		"maxBatchInstancePercent": 20,
+		"maxUnhealthyInstancePercent": 20,
+		"maxUnhealthyUpgradedInstancePercent": "20",
 		"pauseTimeBetweenBatches": "PT0S"
 	}
 }
 ```
 ### Property descriptions
-__batchInstancePercent__ – 
-The maximum percentage of virtual machine instances in the virtual machine scale set that will be upgraded simultaneously by the rolling upgrade in one batch.
-The default value is 20.
-
+__maxBatchInstancePercent__ – 
+The maximum percent of total virtual machine instances that will be upgraded simultaneously by the rolling upgrade in one batch. As this is a maximum, unhealthy instances in previous or future batches can cause the percentage of instances in a batch to decrease to ensure higher reliability.
+The default value for this parameter is 20.
 
 __pauseTimeBetweenBatches__ – 
 The wait time between completing the update for all virtual machines in one batch and starting the next batch. 
@@ -71,9 +71,23 @@ The time duration should be specified in ISO 8601 format for duration (https://e
 The default value is 0 seconds (PT0S).
 
 __maxUnhealthyUpgradedInstanceCount__ -         
-The maximum number of virtual machine instances which can fail to be successfully upgraded before the Rolling Upgrade is stopped.
-This check will happen per batch after each batch is upgraded.
-If the number of instances which have failed to be upgraded in this rolling upgrade exceeds this number, the rolling update aborts. The default value is 0.
+The maximum percentage of the total virtual machine instances in the scale set that can be simultaneously unhealthy, either as a result of being upgraded, or by being found in an unhealthy state by the virtual machine health checks before the rolling upgrade aborts. This constraint will be checked prior to starting any batch.
+The default value for this parameter is 20.
+
+__maxUnhealthyUpgradedInstancePercent__ – 
+he maximum percentage of upgraded virtual machine instances that can be found to be in an unhealthy state. This check will happen after each batch is upgraded. If this percentage is ever exceeded, the rolling update aborts.
+The default value for this parameter is 20.
+
+## Adding an SLB probe for health
+Before the VMSS can be created or moved into rolling upgrade mode, an SLB probe used to determine the VM health must be added. As a best practice, a new SLB probe should be created explicitly for VMSS health with a high probing rate. The probe can be referenced in the networkProfile of the VMSS:
+```
+"networkProfile": {
+  "healthProbe" : {
+    "id": "[concat(variables('lbId'), '/probes/', variables('webProbeName'))]"
+  },
+  "networkInterfaceConfigurations":
+  ...
+```
 
 ## How to manually trigger a rolling upgrade
 
@@ -89,7 +103,7 @@ CRP API version is 2017-03-30
 ## How to manually trigger a rolling reimage
 Sometimes you may want to just re-set your existing scale set to factory settings. For example you have a stateless app and want to trigger the VMs extensions to re-run. As part of this preview, you can trigger a rolling reimage of a scale set with the following REST API call: /virtualMachineScaleSet/<scaleSetName>/osRollingUpgrade?forceReimage=true
 
-## Manuall rolling upgrade FAQ
+## Manual rolling upgrade FAQ
 
 Q. When a particular batch of VMs is picked for upgrade. Does this model ensure the existing HTTP connections are allowed to drain, and no new HTTP requests will be routed to the VMs in this batch, till deployment is complete? 
 
@@ -131,8 +145,9 @@ GET on /subscriptions/subscription_id/resourceGroups/resource_group/providers/Mi
 {
   "properties": {
     "policy": {
-      "batchInstancePercent": 20,
-      "maxUnhealthyUpgradedInstanceCount": 0,
+      "maxBatchInstancePercent": 20,
+      "maxUnhealthyInstancePercent": 20,
+      "maxUnhealthyUpgradedInstancePercent": "20",
       "pauseTimeBetweenBatches": "PT0S"
     },
     "runningStatus": {
