@@ -136,7 +136,13 @@
         "singlePlacementGroup": "true",
         "upgradePolicy": {
           "mode": "Rolling",
-          "automaticOSUpgrade": "false"
+          "automaticOSUpgrade": "false",
+          "rollingUpgradePolicy": {
+            "maxBatchInstancePercent": 20,
+            "maxUnhealthyInstancePercent": 10,
+            "maxUnhealthyUpgradedInstancePercent": 10,
+            "pauseTimeBetweenBatches": "PT0S"
+          }
         },
         "overprovision": "true",
         "virtualMachineProfile": {
