@@ -70,7 +70,7 @@
       "properties": {
         "singlePlacementGroup": "false",
         "upgradePolicy": {
-            "mode": "Automatic",
+            "mode": "Rolling",
             "automaticOSUpgrade": "true",
           "rollingUpgradePolicy": {
             "maxBatchInstancePercent": 20,
