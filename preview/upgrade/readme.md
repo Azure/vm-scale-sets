@@ -54,8 +54,8 @@ Automatic OS upgrades are offered when the following conditions are met:
     "automaticOSUpgrade": "true" or "false",
 	"rollingUpgradePolicy": {
 		"maxBatchInstancePercent": 20,
-		"maxUnhealthyInstancePercent": 20,
-		"maxUnhealthyUpgradedInstancePercent": "20",
+		"maxUnhealthyInstancePercent": 5,
+		"maxUnhealthyUpgradedInstancePercent": 5",
 		"pauseTimeBetweenBatches": "PT0S"
 	}
 }
@@ -151,8 +151,8 @@ GET on `/subscriptions/subscription_id/resourceGroups/resource_group/providers/M
   "properties": {
     "policy": {
       "maxBatchInstancePercent": 20,
-      "maxUnhealthyInstancePercent": 20,
-      "maxUnhealthyUpgradedInstancePercent": "20",
+      "maxUnhealthyInstancePercent": 5,
+      "maxUnhealthyUpgradedInstancePercent": 5,
       "pauseTimeBetweenBatches": "PT0S"
     },
     "runningStatus": {
