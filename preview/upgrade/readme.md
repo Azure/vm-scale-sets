@@ -92,8 +92,7 @@ The load-balancer probe can be referenced in the networkProfile of the VMSS and 
   "networkInterfaceConfigurations":
   ...
 ```
-A load-balancer probe isn't required for automatic OS upgrades, but it is highly recommended.
-
+A load-balancer probe isn't required for automatic OS upgrades, but it is highly recommended
 ## How to manually trigger a rolling upgrade
 
 1) Make a post request to `/subscriptions/<subId>/resourceGroups/<rgName>/Microsoft.Compute/virtualMachineScaleSets/<vmssName>/osRollingUpgrade` 
@@ -138,7 +137,7 @@ There is no in built mechanism for draining, it is up to your app to stop and st
 
 ### Manual rolling upgrades
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fpreview%2Fupgrade%2Fmanualupdate.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fpreview%2Fupgrade%2Fmanualrolling.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
