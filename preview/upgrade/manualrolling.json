@@ -66,6 +66,9 @@
       "type": "Microsoft.Network/loadBalancers",
       "name": "[variables('lbName')]",
       "location": "[resourceGroup().location]",
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/virtualNetworks/', variables('newVNETName'))]"
+      ],
       "apiVersion": "2016-03-30",
       "properties": {
         "frontendIPConfigurations": [
@@ -139,8 +142,8 @@
           "automaticOSUpgrade": "false",
           "rollingUpgradePolicy": {
             "maxBatchInstancePercent": 20,
-            "maxUnhealthyInstancePercent": 10,
-            "maxUnhealthyUpgradedInstancePercent": 10,
+            "maxUnhealthyInstancePercent": 20,
+            "maxUnhealthyUpgradedInstancePercent": 20,
             "pauseTimeBetweenBatches": "PT0S"
           }
         },
