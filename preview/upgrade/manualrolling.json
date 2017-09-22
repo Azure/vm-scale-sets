@@ -188,7 +188,7 @@
                       },
                       "loadBalancerBackendAddressPools": [
                           {
-                            "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', variables('lbName'), variables('bePoolName'))]"
+                            "id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/loadBalancers/', variables('lbName'), '/backendAddressPools/', variables('bepoolName'))]"
                           }
                         ]
                       }
