@@ -162,7 +162,7 @@
           "automaticOSUpgrade": "false",
           "rollingUpgradePolicy": {
             "maxBatchInstancePercent": 20,
-            "maxUnhealthyInstancePercent": 10,
+            "maxUnhealthyInstancePercent": 25,
             "maxUnhealthyUpgradedInstancePercent": 10,
             "pauseTimeBetweenBatches": "PT0S"
           }
