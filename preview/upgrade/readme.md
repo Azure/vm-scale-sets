@@ -153,7 +153,7 @@ Note: You need a special feature flag on your subscription to use the daily buil
 
 ### Zone redundant manual rolling upgrades (limited preview - requires flag on subscription)
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fpreview%2Fupgrade%2Fzonesmanualupdate.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fpreview%2Fupgrade%2Fzonesmanualrolling.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
