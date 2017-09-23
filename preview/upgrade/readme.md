@@ -1,12 +1,18 @@
 # Azure VM scale set automatic upgrade and rolling upgrade preview
 
-Welcome to the VM scale set automatic OS image update, and manually triggered rolling update preview.
+Welcome to the VM scale set automatic OS image update, and manually triggered rolling update preview. 
 
-This is currently a limited preview - you won't be able to use this feature unless your Azure subscription is registered to use it.
+You can try the rolling upgrade, which is in public preview, now. The automated OS image update preview is currently a limited preview - you won't be able to use this feature unless your Azure subscription is registered to use it.
 
-Sign up for the automatic upgrade and rolling upgrade feature previews [here](https://forms.office.com/Pages/ResponsePage.aspx?id=v4j5cvGGr0GRqy180BHbRynq-GTEl8lLqDPOris8e0JUMU9BQllYT1c5SzlIRlA4UTI0V0FUMDU3MC4u).
 
-Last update: 9/19/17.
+You can register for the automated OS upgrade feature using this command:
+```
+Register-AzureRmProviderFeature -FeatureName AutoOSUpgradePreview -ProviderNamespace Microsoft.Compute
+```
+
+Note: While in limited preview, automatic OS upgrades only support 3 OS skus (see below), and have no SLA or guarantees. We would love to get your feedback, but do not use for production workloads.
+
+Last update: 9/21/17.
 
 ## Pre-requisites
 Automatic OS upgrades are offered when the following conditions are met:
@@ -55,7 +61,7 @@ Automatic OS upgrades are offered when the following conditions are met:
 	"rollingUpgradePolicy": {
 		"maxBatchInstancePercent": 20,
 		"maxUnhealthyInstancePercent": 5,
-		"maxUnhealthyUpgradedInstancePercent": 5",
+		"maxUnhealthyUpgradedInstancePercent": 5,
 		"pauseTimeBetweenBatches": "PT0S"
 	}
 }
@@ -92,7 +98,8 @@ The load-balancer probe can be referenced in the networkProfile of the VMSS and 
   "networkInterfaceConfigurations":
   ...
 ```
-A load-balancer probe isn't required for automatic OS upgrades, but it is highly recommended
+A load-balancer probe is not required for automatic OS upgrades, but it is highly recommended.
+
 ## How to manually trigger a rolling upgrade
 
 1) Make a post request to `/subscriptions/<subId>/resourceGroups/<rgName>/Microsoft.Compute/virtualMachineScaleSets/<vmssName>/osRollingUpgrade` 
@@ -114,7 +121,7 @@ Q. When a particular batch of VMs is picked for upgrade. Does this model ensure 
 A. We do not move onto the next batch until the previous batch has completed being upgraded. 
 In order to get the behavior that you are requesting you will need to add a custom health probe for your load balancer, and you need to start reporting unhealthy on your custom health probe when your OS receives a shutdown notification. You need to delay OS shutdown until you are no longer receiving traffic (you have been reporting unhealthy on your health probe for long enough).
 
-There is no in built mechanism, it is up to partner teams to stop and start traffic using custom loadbalancer probes.
+There is no in built mechanism, the recommendation is to stop and start traffic using custom load balancer probes.
 
 You are right about health probes not supporting http, although it is my understanding that that feature may be forthcoming (not sure what the product plan is there though)
 
@@ -131,13 +138,22 @@ There is no in built mechanism for draining, it is up to your app to stop and st
 </a>
 
 ### Automatic rolling upgrades - Ubuntu 16.04-DAILY-LTS for testing
+
+Note: You need a special feature flag on your subscription to use the daily build with automatic updates.
+
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fpreview%2Fupgrade%2Fdailyupdate.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
 ### Manual rolling upgrades
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fpreview%2Fupgrade%2Fmanualrolling.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fpreview%2Fupgrade%2Fmanualupdate.json" target="_blank">
+    <img src="http://azuredeploy.net/deploybutton.png"/>
+</a>
+
+### Zone redundant manual rolling upgrades (limited preview - requires flag on subscription)
+
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fpreview%2Fupgrade%2Fzonesmanualupdate.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
