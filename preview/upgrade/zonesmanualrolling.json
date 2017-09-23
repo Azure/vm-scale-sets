@@ -25,7 +25,7 @@
     "imageVersion": "16.04-LTS",
     "addressPrefix": "10.0.0.0/8",
     "namingInfix": "[toLower(parameters('vmssNamePrefix'))]",
-	"sizeOfDiskInGB": "1023",
+    "pipName": "[concat(variables('namingInfix'), 'pip')]",
     "newVNETName": "[concat(variables('namingInfix'), 'vnet')]",
     "subnetName": "subnet",
     "subnetPrefix": "10.0.0.0/16",
@@ -41,6 +41,18 @@
     "computeApiVersion": "2017-03-30"
   },
   "resources": [
+    {
+      "type": "Microsoft.Network/publicIPAddresses",
+      "name": "[variables('pipName')]",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2017-08-01",
+      "sku": {
+        "name": "Standard"
+      },
+      "properties": {
+        "publicIPAllocationMethod": "Static"
+      }
+    },
     {
       "apiVersion": "[variables('networkApiVersion')]",
       "type": "Microsoft.Network/virtualNetworks",
@@ -66,14 +78,20 @@
       "type": "Microsoft.Network/loadBalancers",
       "name": "[variables('lbName')]",
       "location": "[resourceGroup().location]",
-      "apiVersion": "2016-03-30",
+      "apiVersion": "2017-08-01",
+      "sku": {
+        "name": "Standard"
+      },
+      "dependsOn": [
+        "[concat('Microsoft.Network/publicIPAddresses/', variables('pipName'))]"
+      ],
       "properties": {
         "frontendIPConfigurations": [
           {
             "name": "[variables('feIpConfigName')]",
             "properties": {
-              "subnet": {
-                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('newVNETName'), variables('subnetName'))]"
+              "publicIPAddress": {
+                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('pipName'))]"
               }
             }
           }
@@ -156,13 +174,6 @@
               "caching": "ReadOnly",
               "createOption": "FromImage"
             },
-            "dataDisks": [
-            {
-              "diskSizeGB": "[variables('sizeOfDiskInGB')]",
-              "lun": 0,
-              "createOption": "Empty"
-            }
-          ],
             "imageReference": {
               "publisher": "[variables('imagePublisher')]",
               "offer": "[variables('imageOffer')]",
@@ -176,22 +187,22 @@
             "adminPassword": "[parameters('adminPassword')]"
           },
           "networkProfile": {
-            "healthProbe" : {
+            "healthProbe": {
               "id": "[concat(variables('lbId'), '/probes/', variables('sshProbeName'))]"
             },
             "networkInterfaceConfigurations": [
               {
                 "name": "[concat('nic', parameters('vmssNamePrefix'))]",
                 "properties": {
-                "primary": "true",
-                "ipConfigurations": [
-                  {
-                    "name": "[concat('ipconfig', parameters('vmssNamePrefix'))]",
-                    "properties": {
-                      "subnet": {
-                        "Id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/virtualNetworks/', variables('newVNETName'), '/subnets/', variables('subnetName'))]"
-                      },
-                      "loadBalancerBackendAddressPools": [
+                  "primary": "true",
+                  "ipConfigurations": [
+                    {
+                      "name": "[concat('ipconfig', parameters('vmssNamePrefix'))]",
+                      "properties": {
+                        "subnet": {
+                          "Id": "[concat('/subscriptions/', subscription().subscriptionId,'/resourceGroups/', resourceGroup().name, '/providers/Microsoft.Network/virtualNetworks/', variables('newVNETName'), '/subnets/', variables('subnetName'))]"
+                        },
+                        "loadBalancerBackendAddressPools": [
                           {
                             "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', variables('lbName'), variables('bePoolName'))]"
                           }
