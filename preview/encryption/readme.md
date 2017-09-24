@@ -30,7 +30,8 @@ Set-AzureRmKeyVaultAccessPolicy -VaultName $keyVaultName -EnabledForDiskEncrypti
 - Disable encryption on a running windows VM ScaleSet: [201-decrypt-vmss-windows](https://github.com/SudhakaraReddyEvuri/azure-quickstart-templates/tree/suredd-vmss-test/201-decrypt-vmss-windows)
 
 ## PowerShell cmdlets for VMSS Encryption
-|CommandType     |Name                                               |Version    |Source|
+|CommandType     |Name                                               |Version    |Source         |
+|----------------|---------------------------------------------------|-----------|---------------|
 |Alias           |Get-AzureRmVmssDiskEncryptionStatus                |3.4.0      |AzureRM.Compute|
 |Alias           |Get-AzureRmVmssVMDiskEncryptionStatus              |3.4.0      |AzureRM.Compute|
 |Cmdlet          |Disable-AzureRmVmssDiskEncryption                  |3.4.0      |AzureRM.Compute|
