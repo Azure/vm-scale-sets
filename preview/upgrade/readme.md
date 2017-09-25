@@ -59,7 +59,7 @@ Automatic OS upgrades are offered when the following conditions are met:
     "mode": "Rolling", // Must be "Rolling" for manual upgrades; can be anything for automatic OS upgrades
     "automaticOSUpgrade": "true" or "false",
 	"rollingUpgradePolicy": {
-		"maxBatchInstancePercent": 20,
+		"maxBatchInstancePercent": 5,
 		"maxUnhealthyInstancePercent": 5,
 		"maxUnhealthyUpgradedInstancePercent": 5,
 		"pauseTimeBetweenBatches": "PT0S"
