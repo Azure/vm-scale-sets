@@ -1,8 +1,13 @@
 # Azure VM scale set Availability Zones preview
 
-Last update: 10/4/2017.
+Last update: 10/5/2017.
 
 Preview site for onboarding scale sets to the Azure Availability Zones preview. For more information about Availability Zones, go here: [Overview of Availability Zones in Azure (Preview)](https://docs.microsoft.com/en-us/azure/availability-zones/az-overview).
+
+
+![Zone redundant VM scale set diagram](./img/zone_redundant_vmss.png)
+
+Note: Availabliity Zones are initially available only in these regions: **West Europe** & **East US 2** 
 
 ### Single zone
 A _zonal_ scale set is a scale set that is pinned to a single Availability Zone. Zonal scale sets are currently available in public preview.
@@ -30,6 +35,9 @@ Note: This template will not work unless your Azure subscription has special fea
 
 ### Zone redundant load balancer (Load Balancer 'Standard')
 Zonal and zone redudnant scale sets works with the new Load Balancer 'Standard SKU'. See [Azure Load Balancer Standard overview (Preview)](https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-standard-overview) for more info.
+
+Load Balancer 'Standard' is currently available in the following regions (AZ supporting regions in bold): 
+**East US 2**, Central US, North Europe, West Central US, **West Europe**, Southeast Asia.
 
 Here is an example which also relies on the _VM Scale Sets manually triggered rolling image upgrade_ preview. It uses a Load Balancer 'Standard' sku to provide an applicaiton health probe.
 
