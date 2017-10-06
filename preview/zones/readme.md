@@ -7,7 +7,7 @@ Welcome to the Azure VM scale sets on Availability Zones preview. For more infor
 Note: Availabliity Zones are initially available only in these regions: **West Europe** & **East US 2** 
 
 ### Single zone
-A _zonal_ scale set is a scale set that is pinned to a single Availability Zone. The VMs are evenly distributed between the zones. Zonal scale sets are currently available in public preview.
+A _zonal_ scale set is a scale set that is pinned to a single Availability Zone. Zonal scale sets are currently available in public preview.
 
 ![Zonal scale set diagram](./img/zonal_vmss.png)
 
@@ -21,7 +21,7 @@ Pinning a scale set to a zone enables you to create multiple scale sets, each pi
 </a>
 
 ### Zone redundant
-A _zone-redundant_ scale set is a scale set that is spread across more than one availablity zone.
+A _zone-redundant_ scale set is a scale set that is spread across more than one availablity zone. The VMs are evenly distributed between the zones.
 
 ![Zone redundant VM scale set diagram](./img/zone_redundant_vmss.png)
 
