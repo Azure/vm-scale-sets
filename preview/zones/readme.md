@@ -33,9 +33,10 @@ Note: This template will not work unless your Azure subscription has special fea
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
-
 ### Zone redundant load balancer (Load Balancer 'Standard')
 Zonal and zone redundant scale sets work with the new Load Balancer 'Standard SKU'. See [Azure Load Balancer Standard overview (Preview)](https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-standard-overview) for more info.
+
+To register for the zone redundant load balancer 'Standard' preview click here: [https://aka.ms/azenroll](https://aka.ms/azenroll)
 
 Load Balancer 'Standard' is currently available in the following regions (AZ supporting regions in bold): 
 **East US 2**, Central US, North Europe, West Central US, **West Europe**, Southeast Asia.
