@@ -2,7 +2,7 @@
 
 Last update: 10/5/2017.
 
-Preview site for onboarding scale sets to the Azure Availability Zones preview. For more information about Availability Zones, go here: [Overview of Availability Zones in Azure (Preview)](https://docs.microsoft.com/en-us/azure/availability-zones/az-overview).
+Welcome to the Azure VM scale sets on Availability Zones preview. For more information about Availability Zones, go here: [Overview of Availability Zones in Azure (Preview)](https://docs.microsoft.com/en-us/azure/availability-zones/az-overview).
 
 Note: Availabliity Zones are initially available only in these regions: **West Europe** & **East US 2** 
 
@@ -35,7 +35,7 @@ Note: This template will not work unless your Azure subscription has special fea
 
 
 ### Zone redundant load balancer (Load Balancer 'Standard')
-Zonal and zone redudnant scale sets works with the new Load Balancer 'Standard SKU'. See [Azure Load Balancer Standard overview (Preview)](https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-standard-overview) for more info.
+Zonal and zone redundant scale sets work with the new Load Balancer 'Standard SKU'. See [Azure Load Balancer Standard overview (Preview)](https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-standard-overview) for more info.
 
 Load Balancer 'Standard' is currently available in the following regions (AZ supporting regions in bold): 
 **East US 2**, Central US, North Europe, West Central US, **West Europe**, Southeast Asia.
