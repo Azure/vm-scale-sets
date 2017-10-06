@@ -7,7 +7,7 @@ Preview site for onboarding scale sets to the Azure Availability Zones preview. 
 Note: Availabliity Zones are initially available only in these regions: **West Europe** & **East US 2** 
 
 ### Single zone
-A _zonal_ scale set is a scale set that is pinned to a single Availability Zone. Zonal scale sets are currently available in public preview.
+A _zonal_ scale set is a scale set that is pinned to a single Availability Zone. The VMs are evenly distributed between the zones. Zonal scale sets are currently available in public preview.
 
 ![Zonal scale set diagram](./img/zonal_vmss.png)
 
@@ -49,15 +49,15 @@ Here is an example which also relies on the _VM Scale Sets manually triggered ro
 The new load balancer can also load balance between scale sets of up to 1000 VMs, and multiple scale sets.
 
 ### Notes
-The VMs are evenly distributed between the zones.
 
-If a zone goes down, there isn’t automatic scale-out. You’d have to do that manually (or link it to autoscale settings like CPU etc.).
+#### Zone failure
+If a zone goes down, a scale set will not automatically scale-out. An application will need to manually increase scale set capacity to scale out to other zones (or link it to autoscale settings like CPU etc.).
 
-There is a VMSS setting:
+#### zoneBalance setting
 
-_zoneBalance_: 
+Zone redundant scale sets have a _zoneBalance_ boolean property: 
 - True if you want VMs strictly evenly distribution across zones. 
 - False if you doesn’t need strictly even distribution. VMs will be allocated to good zones if there is a zone outage when creating/scaling out. Default value: true.
 
-If you had this set to False and scaled out, you’d be able to get back up to original capacity using other zones. 
+If this is set to False and you scale out your scale set during a zone failure by increasing capacity, you’d be able to get back up to original capacity using other zones. 
 
