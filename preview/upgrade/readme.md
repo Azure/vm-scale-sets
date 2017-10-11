@@ -76,7 +76,7 @@ The wait time between completing the update for all virtual machines in one batc
 The time duration should be specified in ISO 8601 format for duration (https://en.wikipedia.org/wiki/ISO_8601#Durations)
 The default value is 0 seconds (PT0S).
 
-__maxUnhealthyUpgradedInstanceCount__ -         
+__maxUnhealthyInstancePercent__ -         
 The maximum percentage of the total virtual machine instances in the scale set that can be simultaneously unhealthy, either as a result of being upgraded, or by being found in an unhealthy state by the virtual machine health checks before the rolling upgrade aborts. This constraint will be checked prior to starting any batch.
 The default value for this parameter is 20.
 
