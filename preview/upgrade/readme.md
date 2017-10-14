@@ -12,7 +12,7 @@ Register-AzureRmProviderFeature -FeatureName AutoOSUpgradePreview -ProviderNames
 
 Note: While in limited preview, automatic OS upgrades only support 3 OS skus (see below), and have no SLA or guarantees. We would love to get your feedback, but do not use for production workloads.
 
-Last update: 9/23/17.
+Last update: 10/14/17.
 
 ## Pre-requisites
 Automatic OS upgrades are offered when the following conditions are met:
