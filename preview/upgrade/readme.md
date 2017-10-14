@@ -136,7 +136,7 @@ There is no in built mechanism for draining, it is up to your app to stop and st
 
 Note: You need to self-register for this:
 ```
-Register-AzureRmProviderFeature -FeatureName AutoOSUpgradePreview -ProviderNamespace Microsoft.Network
+Register-AzureRmProviderFeature -FeatureName AutoOSUpgradePreview -ProviderNamespace Microsoft.Compute
 ```
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fpreview%2Fupgrade%2Fautoupdate.json" target="_blank">
