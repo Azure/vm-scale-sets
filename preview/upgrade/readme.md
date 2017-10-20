@@ -12,7 +12,7 @@ Register-AzureRmProviderFeature -FeatureName AutoOSUpgradePreview -ProviderNames
 
 Note: While in limited preview, automatic OS upgrades only support 3 OS skus (see below), and have no SLA or guarantees. We would love to get your feedback, but do not use for production workloads.
 
-Last update: 10/14/17.
+Last update: 10/20/17.
 
 ## Pre-requisites
 Automatic OS upgrades are offered when the following conditions are met:
@@ -46,6 +46,32 @@ Automatic OS upgrades are offered when the following conditions are met:
 
 ## When automatic upgrade happens
 - Automatic OS upgrades are triggered when the publisher for your OS sku releases a new image version.
+
+## Enforcing an OS image upgrade policy across your subscription
+For safe upgrades it is highly recommended to enforce an upgrade policy, which includes an application health probe, across your subscription. You can do this by applying apply the following ARM policy to your subscription, which will reject deployments that do not have automated OS image upgrade settings configured:
+```
+{
+  "if": {
+    "anyOf": [
+      {
+        "field": "Microsoft.Compute/VirtualMachineScaleSets/properties.upgradePolicy.automaticOSUpgrade",
+        "exists": "False"
+      },
+      {
+        "field": "Microsoft.Compute/VirtualMachineScaleSets/properties.upgradePolicy.automaticOSUpgrade",
+        "equals": "False"
+      },
+      {
+        "field": "Microsoft.Compute/VirtualMachineScaleSets/properties.virtualMachineProfile.networkProfile.healthProbe.id",
+        "exists": "False"
+      }
+    ]
+  },
+  "then": {
+    "effect": "Deny"
+  }
+}
+```
 
 ## How to configure auto-updates
 
