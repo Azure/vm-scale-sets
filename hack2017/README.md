@@ -1,15 +1,14 @@
 # Hackathon 2017 - RDS + Azure VMSS 
 ## Autoscale your Remote Desktop Session Hosts with Azure-native capabilities 
 
-Last update: 7/06/17
+Last update: 10/20/17
 
 Location for files related to the OneWeek Hackathon 2017 [RDS + Azure VMSS - Autoscale your Remote Desktop Session Hosts with Azure-native capabilities](https://garagehackbox.azurewebsites.net/hackathons/1074/projects/67089) project.
 
-Initially the files in the project are for VMs in Availability sets.
+The purpose of this project is to convert an Azure RDS solution, which was based VMs in Availability sets, to use VM scale sets for the host VMs. This makes the solution much easier to scale. Manual scaling can be as simple as moving the scale slider bar in the Azure portal, and auto-scaling solutions can be integrated.
 
-- Converted azuredeploy.json to use scale sets.
 
-- Currently in progress: testing
+- Currently in progress: PowerShell autoscale script.
 
 ### Deploy scale set with one extension - join domain and sessionhost
 
