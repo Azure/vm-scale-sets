@@ -29,7 +29,7 @@ You can sign up to the zone redundant scale set preview here: [https://aka.ms/xz
 
 Note: This template will not work unless your Azure subscription has special feature flags enabled.
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fvm-scale-sets%2Fmaster%2Fpreview%2Fzones%2Fmultizone.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fpreview%2Fzones%2Fmultizone.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
