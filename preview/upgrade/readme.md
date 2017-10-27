@@ -5,9 +5,13 @@ Welcome to the VM scale set automatic OS image update, and manually triggered ro
 You can try the rolling upgrade, which is in public preview, now. The automated OS image update preview is currently a limited preview - you won't be able to use this feature unless your Azure subscription is registered to use it.
 
 
-You can register for the automated OS upgrade feature using this command:
+You need to register for the automated OS upgrade feature using this command:
+
 ```
-Register-AzureRmProviderFeature -FeatureName AutoOSUpgradePreview -ProviderNamespace Microsoft.Compute
+Register-AzureRmProviderFeature -ProviderNamespace Microsoft.Compute -FeatureName AutoOSUpgradePreview
+# Wait 10 min till state transitions to 'Registered'
+Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Compute
+
 ```
 
 Note: While in limited preview, automatic OS upgrades only support 3 OS skus (see below), and have no SLA or guarantees. We would love to get your feedback, but do not use for production workloads.
@@ -159,11 +163,6 @@ There is no in built mechanism for draining, it is up to your app to stop and st
 ## Example templates
 
 ### Automatic rolling upgrades - Ubuntu 16.04-LTS
-
-Note: You need to self-register for this:
-```
-Register-AzureRmProviderFeature -FeatureName AutoOSUpgradePreview -ProviderNamespace Microsoft.Compute
-```
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fpreview%2Fupgrade%2Fautoupdate.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
