@@ -84,12 +84,12 @@ For safe upgrades it is highly recommended to enforce an upgrade policy, which i
 "upgradePolicy": {
     "mode": "Rolling", // Must be "Rolling" for manual upgrades; can be anything for automatic OS upgrades
     "automaticOSUpgrade": "true" or "false",
-	"rollingUpgradePolicy": {
-		"maxBatchInstancePercent": 5,
-		"maxUnhealthyInstancePercent": 5,
-		"maxUnhealthyUpgradedInstancePercent": 5,
-		"pauseTimeBetweenBatches": "PT0S"
-	}
+	  "rollingUpgradePolicy": {
+		  "maxBatchInstancePercent": 20,
+		  "maxUnhealthyInstancePercent": 20,
+		  "maxUnhealthyUpgradedInstancePercent": 5,
+		  "pauseTimeBetweenBatches": "PT0S"
+	  }
 }
 ```
 ### Property descriptions
