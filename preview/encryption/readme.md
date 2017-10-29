@@ -2,7 +2,7 @@
 
 Welcome to the VM scale set Azure Disk Encryption preview.
 
-Status (9/24/2017): VMSS disk encryption is currently a limited preview which requires self-registration in order to use (see below).
+Status (10/29/2017): VMSS disk encryption is currently a limited preview which requires self-registration in order to use (see below).
 
 ## Caveats
 - No Linux OS disk encryption in the current preview.
@@ -14,8 +14,8 @@ Register-AzureRmProviderFeature -FeatureName UnifiedDiskEncryption -ProviderName
 ```
 
 ## Supported regions
-VMSS encryption is only available in preview regions, but will be opened up to public regions soon.
-- EastUS2EUAP
+VMSS encryption is rolling out to Azure regions. It is currently available in:
+- West US 2
 
 ### Using Templates
 1. Create a KeyVault in the same subscription and region as the VMSS
