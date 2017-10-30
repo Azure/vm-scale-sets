@@ -14,8 +14,7 @@ Register-AzureRmProviderFeature -FeatureName UnifiedDiskEncryption -ProviderName
 ```
 
 ## Supported regions
-VMSS encryption is rolling out to Azure regions. It is currently available in:
-- West US 2
+VMSS encryption preview is now available in all public Azure regions.
 
 ### Using Templates
 1. Create a KeyVault in the same subscription and region as the VMSS
