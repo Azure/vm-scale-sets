@@ -114,15 +114,7 @@ A load-balancer probe is not required for automatic OS upgrades, but it is highl
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
-### Automatic rolling upgrades - Ubuntu 16.04-DAILY-LTS for testing
-
-Note: You need a special feature flag on your subscription to use the daily build with automatic updates.
-
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fpreview%2Fupgrade%2Fdailyupdate.json" target="_blank">
-    <img src="http://azuredeploy.net/deploybutton.png"/>
-</a>
-
-## Example automatic rolling upgrade status
+## Checking automatic rolling upgrade status
 
 GET on `/subscriptions/subscription_id/resourceGroups/resource_group/providers/Microsoft.Compute/virtualMachineScaleSets/vmss_name/rollingUpgrades/latest?api-version=2017-03-30`
 
