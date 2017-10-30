@@ -2,7 +2,7 @@
 
 Welcome to the VM scale set Azure Disk Encryption preview.
 
-Status (10/29/2017): VMSS disk encryption is currently a limited preview which requires self-registration in order to use (see below).
+Status (10/29/2017): VMSS disk encryption is a preview feature which requires self-registration in order to use (see below).
 
 ## Caveats
 - No Linux OS disk encryption in the current preview.
@@ -23,12 +23,12 @@ VMSS encryption preview is now available in all public Azure regions.
 Set-AzureRmKeyVaultAccessPolicy -VaultName $keyVaultName -EnabledForDiskEncryption
 ```
 
-### Windows VMSS (withOUT AAD dependency):
-- Create a Windows VM ScaleSet and enable encryption: [201-encrypt-vmss-windows-jumpbox](https://github.com/SudhakaraReddyEvuri/azure-quickstart-templates/tree/suredd-vmss-test/201-encrypt-vmss-windows-jumpbox)
-- Enable encryption on a running windows VM ScaleSet : [201-encrypt-running-vmss-windows](https://github.com/SudhakaraReddyEvuri/azure-quickstart-templates/tree/suredd-vmss-test/201-encrypt-running-vmss-windows)
-- Disable encryption on a running windows VM ScaleSet: [201-decrypt-vmss-windows](https://github.com/SudhakaraReddyEvuri/azure-quickstart-templates/tree/suredd-vmss-test/201-decrypt-vmss-windows)
+### Windows VMSS:
+- Create a Windows VM ScaleSet and enable encryption: [201-encrypt-vmss-windows-jumpbox](https://github.com/Azure/azure-quickstart-templates/tree/master/201-encrypt-vmss-windows-jumpbox)
+- Enable encryption on a running windows VM ScaleSet : [201-encrypt-running-vmss-windows](https://github.com/Azure/azure-quickstart-templates/tree/master/201-encrypt-running-vmss-windows)
+- Disable encryption on a running windows VM ScaleSet: [201-decrypt-vmss-windows](https://github.com/Azure/azure-quickstart-templates/tree/master/201-decrypt-vmss-windows)
 
-## PowerShell cmdlets for VMSS Encryption
+## PowerShell cmdlets for scale set encryption
 |CommandType     |Name                                               |Version    |Source         |
 |----------------|---------------------------------------------------|-----------|---------------|
 |Alias           |Get-AzureRmVmssDiskEncryptionStatus                |3.4.0      |AzureRM.Compute|
