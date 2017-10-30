@@ -12,7 +12,8 @@ Status (10/30/2017): VMSS disk encryption is a preview feature which requires se
 ## Opt-in to ADE-VMSS preview: 
 ```
 Register-AzureRmProviderFeature -ProviderNamespace Microsoft.Compute -FeatureName "UnifiedDiskEncryption"
-# Wait 10 min till state transitions to 'Registered'
+# Wait 10 minutes until the state as 'Registered' when you run the following command:
+Get-AzureRmProviderFeature -ProviderNamespace "Microsoft.Compute" -FeatureName "UnifiedDiskEncryption"
 Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Compute
 ```
 
