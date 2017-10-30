@@ -9,7 +9,7 @@ You need to register for the automated OS upgrade feature using this command:
 
 ```
 Register-AzureRmProviderFeature -ProviderNamespace Microsoft.Compute -FeatureName AutoOSUpgradePreview
-# Wait 10 min till state transitions to 'Registered'
+# Wait 10 minutes until state transitions to 'Registered'
 Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Compute
 
 ```
