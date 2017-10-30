@@ -1,25 +1,28 @@
 # Azure VM scale set automatic OS upgrades
 
-The VM scale set automatic OS image upgrade preview. 
-- Works for all VM and scale set sizes
-- Works for Windows and Linux platform images
-- Integrates with application health probe (optional but highly recommended)
-- Upgrades instances in a rolling manner one batch at a time
-- Once configured, the latest OS image provided by publishers is applied to the scale set
-- Portal experience coming soon
+Automatic OS image upgrade is a new preview feature for Azure VM scale sets which supports automatic upgrade of VM images across a scale set.
+
+Automatic OS upgrade has the following characteristics:
+- Once configured, the latest OS image provided by publishers is automatically applied to the scale set.
+- Upgrades instances in a rolling manner one batch at a time each time a new platform image is provided by the publisher.
+- Integrates with application health probe (optional but highly recommended).
+- Works for all VM and scale set sizes.
+- Works for Windows and Linux platform images.
 - You can opt out of automatic upgrades at any time
 
 
-Notes: 
+## Preview notes 
 - While in preview, automatic OS upgrades only support 3 OS skus (see below), and have no SLA or guarantees. We would love to get your feedback, but do not use for production critical workloads.
 - Support for scale sets in Service Fabric clusters is coming soon.
+- Azure autoscale is __not__ currently supported with VM scale set automatic OS upgrade.
+- Portal experience coming soon.
 
 ## Pre-requisites
 Automatic OS upgrades are offered when the following conditions are met:
 
 	The OS image is a platform Image only with Version = _latest_.
     
-    The following SKUs during the intial preview (more will be added):
+    The following SKUs are currently supported (more will be added):
 	
 		Publisher: MicrosoftWindowsServer
 		Offer: WindowsServer
@@ -37,42 +40,20 @@ Automatic OS upgrades are offered when the following conditions are met:
 		Version: latest
 
 
-## When automatic upgrade happens
-- Automatic OS upgrades are triggered when the publisher for your OS sku releases a new image version.
 
 ## Enforcing an OS image upgrade policy across your subscription
 For safe upgrades it is highly recommended to enforce an upgrade policy, which includes an application health probe, across your subscription. You can do this by applying apply the following ARM policy to your subscription, which will reject deployments that do not have automated OS image upgrade settings configured:
 ```
-{
-  "if": {
-    "anyOf": [
-      {
-        "field": "Microsoft.Compute/VirtualMachineScaleSets/properties.upgradePolicy.automaticOSUpgrade",
-        "exists": "False"
-      },
-      {
-        "field": "Microsoft.Compute/VirtualMachineScaleSets/properties.upgradePolicy.automaticOSUpgrade",
-        "equals": "False"
-      },
-      {
-        "field": "Microsoft.Compute/VirtualMachineScaleSets/properties.virtualMachineProfile.networkProfile.healthProbe.id",
-        "exists": "False"
-      }
-    ]
-  },
-  "then": {
-    "effect": "Deny"
-  }
-}
-```
+# ravi TBD
+```'
+
 ## Getting started
-To register for the automated OS upgrade feature use these command:
+You can register for the automated OS upgrade feature by running these Azure PowerShell commands:
 
 ```
 Register-AzureRmProviderFeature -ProviderNamespace Microsoft.Compute -FeatureName AutoOSUpgradePreview
-# Wait 10 minutes until state transitions to 'Registered'
+# Wait 10 minutes until state transitions to 'Registered' (check using Get-AzureRmProviderFeature)
 Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Compute
-
 ```
 
 ## How to configure auto-updates
@@ -125,36 +106,6 @@ The load-balancer probe can be referenced in the networkProfile of the VMSS and 
 ```
 A load-balancer probe is not required for automatic OS upgrades, but it is highly recommended.
 
-## How to manually trigger a rolling upgrade
-
-1) Make a post request to `/subscriptions/<subId>/resourceGroups/<rgName>/Microsoft.Compute/virtualMachineScaleSets/<vmssName>/osRollingUpgrade` 
-Calls to this API will only change the OS disks of your machine if there is a new OS to update your VMs to, and it will conform to the rolling upgrade policies you specify in the rollingUpgradePolicy section of the vmss configuration.
-
-2) Change the OS version in your VMSS.
-
-Note: you can have the OS version set to "latest" in your VMSS properties. However a manually triggered rolling upgrade will only take place after a newer version of the corresponding OS image has been published.
-
-CRP API version is 2017-03-30
-
-## How to manually trigger a rolling reimage
-Sometimes you may want to just re-set your existing scale set to factory settings. For example you have a stateless app and want to trigger the VMs extensions to re-run. As part of this preview, you can trigger a rolling reimage of a scale set with the following REST API call: `/virtualMachineScaleSet/<scaleSetName>/osRollingUpgrade?forceReimage=true`
-
-## Manual rolling upgrade FAQ
-
-Q. When a particular batch of VMs is picked for upgrade. Does this model ensure the existing HTTP connections are allowed to drain, and no new HTTP requests will be routed to the VMs in this batch, till deployment is complete? 
-
-A. We do not move onto the next batch until the previous batch has completed being upgraded. 
-In order to get the behavior that you are requesting you will need to add a custom health probe for your load balancer, and you need to start reporting unhealthy on your custom health probe when your OS receives a shutdown notification. You need to delay OS shutdown until you are no longer receiving traffic (you have been reporting unhealthy on your health probe for long enough).
-
-There is no in built mechanism, the recommendation is to stop and start traffic using custom load balancer probes.
-
-You are right about health probes not supporting http, although it is my understanding that that feature may be forthcoming (not sure what the product plan is there though)
-
-The health probe need not be you website though, you can create a synthetic API that responds healthy always unless you are undergoing an update, or about to undergo an update or reboot.
-
-There is no in built mechanism for draining, it is up to your app to stop and start traffic using custom loadbalancer probes. E.g. you can create a synthetic API that responds healthy always unless you are undergoing an update, or about to undergo an update or reboot.
-
-
 ## Example templates
 
 ### Automatic rolling upgrades - Ubuntu 16.04-LTS
@@ -168,23 +119,6 @@ There is no in built mechanism for draining, it is up to your app to stop and st
 Note: You need a special feature flag on your subscription to use the daily build with automatic updates.
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fpreview%2Fupgrade%2Fdailyupdate.json" target="_blank">
-    <img src="http://azuredeploy.net/deploybutton.png"/>
-</a>
-
-### Manual rolling upgrades
-
-Note: You need to self-register for this:
-```
-Register-AzureRmProviderFeature -FeatureName AllowVmssHealthProbe -ProviderNamespace Microsoft.Network
-```
-
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fpreview%2Fupgrade%2Fmanualupdate.json" target="_blank">
-    <img src="http://azuredeploy.net/deploybutton.png"/>
-</a>
-
-### Zone redundant manual rolling upgrades (limited preview - requires flag on subscription)
-
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fpreview%2Fupgrade%2Fzonesmanualrolling.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
