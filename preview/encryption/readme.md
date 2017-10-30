@@ -24,10 +24,16 @@ VMSS encryption preview is now available in all public Azure regions.
 Set-AzureRmKeyVaultAccessPolicy -VaultName $keyVaultName -EnabledForDiskEncryption
 ```
 
-### Windows VMSS (withOUT AAD dependency):
-- Create a Windows VM ScaleSet and enable encryption: [201-encrypt-vmss-windows-jumpbox](https://github.com/Azure/azure-quickstart-templates/tree/master/201-encrypt-vmss-windows-jumpbox)
-- Enable encryption on a running windows VM ScaleSet : [201-encrypt-running-vmss-windows](https://github.com/Azure/azure-quickstart-templates/tree/master/201-encrypt-running-vmss-windows)
-- Disable encryption on a running windows VM ScaleSet: [201-decrypt-vmss-windows](https://github.com/Azure/azure-quickstart-templates/tree/master/201-decrypt-vmss-windows)
+### Example templates
+1.	Windows:
+- [201-encrypt-running-vmss-windows](https://github.com/Azure/azure-quickstart-templates/tree/master/201-encrypt-running-vmss-windows)
+- [201-encrypt-vmss-windows-jumpbox](https://github.com/Azure/azure-quickstart-templates/tree/master/201-encrypt-vmss-windows-jumpbox)
+- [201-decrypt-vmss-windows](https://github.com/Azure/azure-quickstart-templates/tree/master/201-decrypt-vmss-windows)
+2.	Linux:
+- [201-encrypt-running-vmss-linux](https://github.com/Azure/azure-quickstart-templates/tree/master/201-encrypt-running-vmss-linux)
+- [201-encrypt-vmss-linux-jumpbox](https://github.com/Azure/azure-quickstart-templates/tree/master/201-encrypt-vmss-linux-jumpbox)
+- [201-decrypt-vmss-linux](https://github.com/Azure/azure-quickstart-templates/tree/master/201-decrypt-vmss-linux)
+
 
 ## PowerShell cmdlets for VMSS Encryption
 |CommandType     |Name                                               |Version    |Source         |
@@ -54,5 +60,5 @@ az vmss encryption show -g <resourceGroupName> -n <VMSS name>
 # Disable encryption (For Windows VMSS only)
 az vmss encryption disable -g <resourceGroupName> -n <VMSS name>
 ```
-- [End to end batch file example for Linux VMSS Data disk encryption](https://gist.githubusercontent.com/ejarvi/7766dad1475d5f7078544ffbb449f29b/raw/03e5d990b798f62cf188706221ba6c0c7c2efb3f/enable-linux-vmss.bat) (creates resource group, VMSS, mounts a 5GB data disk, encrypts) 
+- [End to end batch file example for Linux scale set data disk encryption](https://gist.githubusercontent.com/ejarvi/7766dad1475d5f7078544ffbb449f29b/raw/03e5d990b798f62cf188706221ba6c0c7c2efb3f/enable-linux-vmss.bat) (creates resource group, VMSS, mounts a 5GB data disk, encrypts) 
 
