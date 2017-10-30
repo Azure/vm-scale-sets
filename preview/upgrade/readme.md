@@ -2,9 +2,6 @@
 
 Welcome to the VM scale set automatic OS image update, and manually triggered rolling update preview. 
 
-You can try the rolling upgrade, which is in public preview, now. The automated OS image update preview is currently a limited preview - you won't be able to use this feature unless your Azure subscription is registered to use it.
-
-
 You need to register for the automated OS upgrade feature using this command:
 
 ```
