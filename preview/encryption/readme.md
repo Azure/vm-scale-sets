@@ -39,7 +39,8 @@ Set-AzureRmKeyVaultAccessPolicy -VaultName $keyVaultName -EnabledForDiskEncrypti
 |Cmdlet          |Set-AzureRmVmssDiskEncryptionExtension             |3.4.0      |AzureRM.Compute|
 
 ## CLI examples
-- Install latest Azure CLI2.0 which has VMSS cmdlets [https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
+- Install [latest Azure CLI 2.0](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest) which has the new encryption commands. 
+
 ```
 # create VMSS
 az vmss create -g <resourceGroupName> -n <VMSS name> --instance-count 1 --image Win2016Datacenter --admin-username <username> --admin-password <password>"
