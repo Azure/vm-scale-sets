@@ -45,7 +45,7 @@ Automatic OS upgrades are offered when the following conditions are met:
 For safe upgrades it is highly recommended to enforce an upgrade policy, which includes an application health probe, across your subscription. You can do this by applying apply the following ARM policy to your subscription, which will reject deployments that do not have automated OS image upgrade settings configured:
 ```
 # ravi TBD
-```'
+```
 
 ## Getting started
 You can register for the automated OS upgrade feature by running these Azure PowerShell commands:
