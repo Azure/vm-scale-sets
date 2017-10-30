@@ -13,7 +13,7 @@ Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Compute
 
 Note: While in limited preview, automatic OS upgrades only support 3 OS skus (see below), and have no SLA or guarantees. We would love to get your feedback, but do not use for production workloads.
 
-Last update: 10/20/17.
+Last update: 10/30/17.
 
 ## Pre-requisites
 Automatic OS upgrades are offered when the following conditions are met:
@@ -35,13 +35,6 @@ Automatic OS upgrades are offered when the following conditions are met:
 		Publisher: Canonical
 		Offer: UbuntuServer
 		Sku: 16.04-LTS
-		Version: latest
-
-	For testing purposes you can use this nightly build during preview as well. This requires a separate feature flag, so please let us know if you plan to use other than the 3 OS versions above:
-
-		Publisher: Canonical
-		Offer: UbuntuServer
-		Sku: 16.04-DAILY-LTS
 		Version: latest
 
 
@@ -145,14 +138,12 @@ Sometimes you may want to just re-set your existing scale set to factory setting
 
 Q. When a particular batch of VMs is picked for upgrade. Does this model ensure the existing HTTP connections are allowed to drain, and no new HTTP requests will be routed to the VMs in this batch, till deployment is complete? 
 
-A. We do not move onto the next batch until the previous batch has completed being upgraded. 
-In order to get the behavior that you are requesting you will need to add a custom health probe for your load balancer, and you need to start reporting unhealthy on your custom health probe when your OS receives a shutdown notification. You need to delay OS shutdown until you are no longer receiving traffic (you have been reporting unhealthy on your health probe for long enough).
+A. The next batch does not start upgrading until the previous batch has completed being upgraded. 
+Add a custom health probe for your load balancer that can report unhealthy on your custom health probe when your OS receives a shutdown notification. Delay OS shutdown until you are no longer receiving traffic (you have been reporting unhealthy on your health probe for long enough).
 
 There is no in built mechanism, the recommendation is to stop and start traffic using custom load balancer probes.
 
-You are right about health probes not supporting http, although it is my understanding that that feature may be forthcoming (not sure what the product plan is there though)
-
-The health probe need not be you website though, you can create a synthetic API that responds healthy always unless you are undergoing an update, or about to undergo an update or reboot.
+The health probe need not be your website though, you can create a synthetic API that responds healthy always unless you are undergoing an update, or about to undergo an update or reboot.
 
 There is no in built mechanism for draining, it is up to your app to stop and start traffic using custom loadbalancer probes. E.g. you can create a synthetic API that responds healthy always unless you are undergoing an update, or about to undergo an update or reboot.
 
