@@ -1,8 +1,10 @@
 # Azure VM scale set automatic upgrade and rolling upgrade preview
 
-Welcome to the VM scale set automatic OS image update, and manually triggered rolling update preview. 
+Welcome to the VM scale set automatic OS image upgrade preview. This readme also covers manually triggered rolling upgrades. 
 
-You need to register for the automated OS upgrade feature using this command:
+Last update: 10/31/17.
+
+You need to register for the automated OS upgrade feature in order to use it:
 
 ```
 Register-AzureRmProviderFeature -ProviderNamespace Microsoft.Compute -FeatureName AutoOSUpgradePreview
@@ -11,9 +13,10 @@ Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Compute
 
 ```
 
-Note: While in limited preview, automatic OS upgrades only support 3 OS skus (see below), and have no SLA or guarantees. We would love to get your feedback, but do not use for production workloads.
-
-Last update: 10/30/17.
+## Notea 
+- Do not use for production workloads while in preview - no SLA or guarantees.
+- Initially automatic OS upgrades only support 3 OS skus (see below)
+- Autoscale is not yet supported, and will fail when auto or rolling upgrade is configured.
 
 ## Pre-requisites
 Automatic OS upgrades are offered when the following conditions are met:
