@@ -64,18 +64,7 @@ The load-balancer probe can be referenced in the networkProfile of the VMSS and 
 ```
 ### 
 
-## Enforcing an OS image upgrade policy across your subscription
-For safe upgrades, it is highly recommended to enforce an upgrade policy, which can include require application health probes, across your subscription. You can do this by applying the following ARM policy to your subscription, which will reject deployments that do not have automated OS image upgrade settings configured:
-```
-1. Get builtin ARM policy definition: 
-$policyDefinition = Get-AzureRmPolicyDefinition -Id "/providers/Microsoft.Authorization/policyDefinitions/465f0161-0087-490a-9ad9-ad6217f4f43a"
-
-2. Assign policy to a subscription: 
-New-AzureRmPolicyAssignment -Name "Enforce automatic OS upgrades with app health checks" -Scope "/subscriptions/<SubscriptionId>" -PolicyDefinition $policyDefinition
-
-```
-
-## Getting started
+## Registering to use Automatic OS Upgrade
 You can register for the automated OS upgrade feature by running these Azure PowerShell commands:
 
 ```
@@ -92,6 +81,16 @@ Register-AzureRmProviderFeature -ProviderNamespace Microsoft.Network -FeatureNam
 Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Network
 ```
 
+## Enforcing an OS image upgrade policy across your subscription
+For safe upgrades, it is highly recommended to enforce an upgrade policy, which can include require application health probes, across your subscription. You can do this by applying the following ARM policy to your subscription, which will reject deployments that do not have automated OS image upgrade settings configured:
+```
+1. Get builtin ARM policy definition: 
+$policyDefinition = Get-AzureRmPolicyDefinition -Id "/providers/Microsoft.Authorization/policyDefinitions/465f0161-0087-490a-9ad9-ad6217f4f43a"
+
+2. Assign policy to a subscription: 
+New-AzureRmPolicyAssignment -Name "Enforce automatic OS upgrades with app health checks" -Scope "/subscriptions/<SubscriptionId>" -PolicyDefinition $policyDefinition
+
+```
 
 ## How to configure auto-updates
 
@@ -99,7 +98,7 @@ Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Network
 
 ## Automatic OS Upgrade Policy
 
-A VM scale set can have instances spread across single or multiple Placement Groups. Expanding on the description above, VMSS OS Upgrades execute with the following steps:
+Expanding on the description above, VMSS OS Upgrades execute with the following steps:
 
 1) Identify the next batch of VM instances to upgrade, with a batch having maximum 20% of total instance count.
 2) If more than 20% of instances are Unhealthy, stop the upgrade; otherwise continue.
