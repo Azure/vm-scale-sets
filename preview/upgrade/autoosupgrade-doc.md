@@ -56,7 +56,7 @@ During an OS Upgrade, VM instances in a scale set are upgraded one batch at a ti
 
 A scale set can optionally be configured with Application Health Probes to provide the platform with accurate information on the ongoing state of the application. Application Health Probes are Custom Load Balancer Probes which are used as a health signal. The application running on a scale set VM instance can respond to external HTTP or TCP requests indicating whether it is healthy. For more documentation on how Custom Load Balancer Probes work refer to (Understand load balancer probes)[https://docs.microsoft.com/azure/load-balancer/load-balancer-custom-probe-overview]. An Application Health Probe is not required for automatic OS upgrades, but it is highly recommended.
 
-Note: if the scale set is configured to use multiple placement groups, probes using a (Standard Load Balancer)[https://docs.microsoft.com/azure/load-balancer/load-balancer-standard-overview] will need to be used.
+Note: if the scale set is configured to use multiple placement groups, probes using a Standard Load Balancer will need to be used[https://docs.microsoft.com/azure/load-balancer/load-balancer-standard-overview].
 
 ### Configuring a Custom Load Balancer Probe as Application Health Probe on a scale set
 
@@ -165,7 +165,7 @@ Expanding on the description in the Application Health section, scale set OS Upg
 5) If the customer has configured Application Health Probes, the upgrade will wait up to 5 minutes for probes to become healthy, then will immediately continue onto the next batch; otherwise, it will wait 30 minutes before moving on to the next batch.
 6) If there are remaining instances to upgrade, goto step 1) for the next batch; otherwise the upgrade is complete.
 
-The scale set OS Upgrade Engine checks for the overall VM instance health before upgrading every batch. While upgrading a batch, there may be other concurrent Planned or Unplanned maintenance happening in Azure Datacenters that may impact availbility of your VMs. Hence, it is possible that temporarily more than 20% instances may be down. In such cases, at the end of current batch, the scale set upgrade will stop.
+The scale set OS Upgrade Engine checks for the overall VM instance health before upgrading every batch. While upgrading a batch, there may be other concurrent Planned or Unplanned maintenance happening in Azure Datacenters that may impact availbility of your VMs. Hence, it is possible that temporarily more than 20% instances may be down. In such cases, at the end of current batch, the scale set upgrade will stop and retried at a later time.
 
 ## Example template
 
