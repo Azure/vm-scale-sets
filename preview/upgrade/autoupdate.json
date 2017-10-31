@@ -68,16 +68,10 @@
         "capacity": "[parameters('instanceCount')]"
       },
       "properties": {
-        "singlePlacementGroup": "false",
+        "singlePlacementGroup": "true",
         "upgradePolicy": {
-            "mode": "Rolling",
-            "automaticOSUpgrade": "true",
-          "rollingUpgradePolicy": {
-            "maxBatchInstancePercent": 20,
-            "maxUnhealthyInstancePercent": 20,
-            "maxUnhealthyUpgradedInstancePercent": "0",
-            "pauseTimeBetweenBatches": "PT0S"
-          }
+            "mode": "Automatic",
+            "automaticOSUpgrade": "true"
         },
         "overprovision": "true",
         "virtualMachineProfile": {
