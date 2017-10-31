@@ -16,6 +16,7 @@ Automatic OS upgrade has the following characteristics:
 - While in preview, automatic OS upgrades only support 3 OS skus (see below), and have no SLA or guarantees. We would love to get your feedback, but it is recommended to not enable them on production critical workloads during preview.
 - Support for scale sets in Service Fabric clusters is coming soon.
 - Azure autoscale is __not__ currently supported with VM scale set automatic OS upgrade.
+- Azure disk encryption (currently in preview) is __not__ currently supported with VM scale set automatic OS upgrade.
 - Portal experience coming soon.
 
 ## Pre-requisites
@@ -67,9 +68,16 @@ The load-balancer probe can be referenced in the networkProfile of the VMSS and 
 ### 
 
 ## Enforcing an OS image upgrade policy across your subscription
-For safe upgrades it is highly recommended to enforce an upgrade policy, which includes an application health probe, across your subscription. You can do this by applying apply the following ARM policy to your subscription, which will reject deployments that do not have automated OS image upgrade settings configured:
+For safe upgrades it is highly recommended to enforce an upgrade policy, which includes an application health probe, across your subscription. You can do this by applying the following ARM policy to your subscription, which will reject deployments that do not have automated OS image upgrade settings configured:
 ```
-# ravi TBD
+1. Get builtin ARM policy definition: 
+$policyDefinition = Get-AzureRmPolicyDefinition -Id "/providers/Microsoft.Authorization/policyDefinitions/465f0161-0087-490a-9ad9-ad6217f4f43a"
+
+2. Assign policy to a subscription: 
+New-AzureRmPolicyAssignment -Name "Enforce automatic OS upgrades with app health checks" -Scope "/subscriptions/<SubscriptionId>" -PolicyDefinition $policyDefinition
+
+This ARM policy can also be added to a specific resource group under a subscription by setting Scope to that resource group (i.e. -Scope "/subscriptions/<SubscriptionId>/resourceGroups/<ResourceGroupName>"). This means policy needs be assigned to each resource group separately.
+
 ```
 
 ## Getting started
@@ -77,9 +85,18 @@ You can register for the automated OS upgrade feature by running these Azure Pow
 
 ```
 Register-AzureRmProviderFeature -ProviderNamespace Microsoft.Compute -FeatureName AutoOSUpgradePreview
-# Wait 10 minutes until state transitions to 'Registered' (check using Get-AzureRmProviderFeature)
+# Wait 10 minutes until registration state transitions to 'Registered' (check using Get-AzureRmProviderFeature)
 Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Compute
 ```
+
+To use application health probes, register for application health feature by running these Azure PowerShell commands:
+
+```
+Register-AzureRmProviderFeature -ProviderNamespace Microsoft.Network -FeatureName AllowVmssHealthProbe
+# Wait 10 minutes until registration state transitions to 'Registered' (check using Get-AzureRmProviderFeature)
+Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Network
+```
+
 
 ## How to configure auto-updates
 
