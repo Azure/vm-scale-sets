@@ -112,7 +112,7 @@ The VMSS OS Upgrade Engine checks for the overall VM instance health before upgr
 
 ## Example template
 
-### Automatic rolling upgrades - Ubuntu 16.04-LTS
+### <a href='https://github.com/Azure/vm-scale-sets/blob/master/preview/upgrade/autoupdate.json'>Automatic rolling upgrades - Ubuntu 16.04-LTS</a>
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fpreview%2Fupgrade%2Fautoupdate.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
