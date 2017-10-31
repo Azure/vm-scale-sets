@@ -110,48 +110,7 @@ Expanding on the description in the Application Health section, VMSS OS Upgrades
 
 The VMSS OS Upgrade Engine checks for the overall VM instance health before upgrading every batch. While upgrading a batch, there may be other concurrent Planned or Unplanned maintenance happening in Azure Datacenters that may impact availbility of your VMs. Hence, it is possible that temporarily more than 20% instances may be down. In such cases, at the end of current batch VMSS will stop the upgrade.
 
-## VMSS Rolling Upgrades
-
-VMSS Automatic OS Upgrades, leverages a Rolling Upgrade Engine underneath, that updates a Batch of VM instances at a time, checks the instance health, and drives the update to completion. It is now possible for the customers to leverage this Rolling Upgrade, to drive their own updates to a VMSS.
-<Sean: we need to explain that this configuration is not used during Automatic OS Upgrades, otherwise people may think that these policies override the Automatic OS Upgrade defaults>
-
-- Syntax
-```
-
-"upgradePolicy": {
-    "mode": "Rolling", // Must be "Rolling" for manual upgrades; can be anything for automatic OS upgrades
-    "automaticOSUpgrade": "true" or "false",
-	  "rollingUpgradePolicy": {
-		  "maxBatchInstancePercent": 20,
-		  "maxUnhealthyInstancePercent": 20,
-		  "maxUnhealthyUpgradedInstancePercent": 20,
-		  "pauseTimeBetweenBatches": "PT0S"
-	  }
-}
-```
-### Property descriptions
-__maxBatchInstancePercent__ – 
-The maximum percent of total virtual machine instances that will be upgraded simultaneously by the rolling upgrade in one batch. As this is a maximum, unhealthy instances in previous or future batches can cause the percentage of instances in a batch to decrease to ensure higher reliability.
-The default value for this parameter is 20.
-
-__pauseTimeBetweenBatches__ – 
-The wait time between completing the update for all virtual machines in one batch and starting the next batch. 
-The time duration should be specified in ISO 8601 format for duration (https://en.wikipedia.org/wiki/ISO_8601#Durations)
-The default value is 0 seconds (PT0S).
-
-__maxUnhealthyInstancePercent__ -         
-The maximum percentage of the total virtual machine instances in the VM Scale Set that can be simultaneously unhealthy, either as a result of being upgraded, or by being found in an unhealthy state by the virtual machine health checks before the rolling upgrade aborts. This constraint will be checked prior to starting any batch.
-The default value for this parameter is 20.
-
-__maxUnhealthyUpgradedInstancePercent__ – 
-The maximum percentage of upgraded virtual machine instances that can be found to be in an unhealthy state. This check will happen after each batch is upgraded. If this percentage is ever exceeded, the rolling update aborts.
-The default value for this parameter is 20.
-
-## Adding a load-balancer probe for determining health of the rolling upgrade
-Before the VMSS can be created or moved into rolling upgrade mode, a load-balancer probe used to determine VM instance health must be added to the VM Scale Set in the networkProfile.healthProbe.id property.
-
-
-## Example templates
+## Example template
 
 ### Automatic rolling upgrades - Ubuntu 16.04-LTS
 
