@@ -76,8 +76,6 @@ $policyDefinition = Get-AzureRmPolicyDefinition -Id "/providers/Microsoft.Author
 2. Assign policy to a subscription: 
 New-AzureRmPolicyAssignment -Name "Enforce automatic OS upgrades with app health checks" -Scope "/subscriptions/<SubscriptionId>" -PolicyDefinition $policyDefinition
 
-This ARM policy can also be added to a specific resource group under a subscription by setting Scope to that resource group (i.e. -Scope "/subscriptions/<SubscriptionId>/resourceGroups/<ResourceGroupName>"). This means policy needs be assigned to each resource group separately.
-
 ```
 
 ## Getting started
