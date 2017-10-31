@@ -69,7 +69,6 @@ Note: if the VMSS is configured to use multiple placement groups, probes using a
 
 ### Configuring a Custom Load Balancer Probe as Application Health Probe on a VMSS
 
-
 As a best practice, a new load-balancer probe should be created explicitly for VMSS health. The same endpoint for an existing HTTP probe or TCP probe may be used, but a health probe may require different behavior than that of a traditional load-balancer probe. For example, a traditional load-balancer probe may return unhealthy if the load on the instance is too high, whereas that may not be appropriate for determining the instance health during an automatic OS upgrade. The probe should also be set up to have a high probing rate of less than 2 minutes.
 
 The load-balancer probe can be referenced in the networkProfile of the VMSS and can be associated with either an internal or public facing load-balancer:
@@ -97,31 +96,28 @@ New-AzureRmPolicyAssignment -Name "Enforce automatic OS upgrades with app health
 
 - Ensure the automaticOSUpgrade property is set to true in the VMSS model definition. 
 
-## Automatic OS Upgrade Execution
+## Checking the status of an automatic OS upgrade
 
-Expanding on the description in the Application Health section, VMSS OS Upgrades executes following steps:
+You can check the status of the most recent OS upgrade performed on your scale set using Azure PowerShell or CLI.
 
-1) If more than 20% of instances are Unhealthy, stop the upgrade; otherwise proceed.
-2) Identify the next batch of VM instances to upgrade, with a batch having maximum 20% of total instance count.
-3) Upgrade the OS of the next batch of VM instances.
-4) If more than 20% of upgraded instances are Unhealthy, stop the upgrade; otherwise proceed.
-5) If the customer has configured Application Health Probes, the upgrade will wait up to 5 minutes for probes to become healthy, then will immediately continue onto the next batch; otherwise, it will wait 30 minutes before moving on to the next batch.
-6) If there are remaining instances to upgrade, goto step 1) for the next batch; otherwise the upgrade is complete.
+### Azure PowerShell
+Make sure Azure PowerShell 4.4.1 or later (October 2017) is installed.
 
-The VMSS OS Upgrade Engine checks for the overall VM instance health before upgrading every batch. While upgrading a batch, there may be other concurrent Planned or Unplanned maintenance happening in Azure Datacenters that may impact availbility of your VMs. Hence, it is possible that temporarily more than 20% instances may be down. In such cases, at the end of current batch VMSS will stop the upgrade.
+```PowerShell
+Get-AzureRmVmssRollingUpgrade -ResourceGroupName rgname -VMScaleSetName vmssname
+```
 
-## Example template
+### Azure CLI (including Azure Cloud Shell)
+Make sure Azure PowerShell 2.0.20 or later is installed.
 
-### <a href='https://github.com/Azure/vm-scale-sets/blob/master/preview/upgrade/autoupdate.json'>Automatic rolling upgrades - Ubuntu 16.04-LTS</a>
+```CLI
+az vmss rolling-upgrade get-latest --name vmssname --resource-group rgname
+```
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fpreview%2Fupgrade%2Fautoupdate.json" target="_blank">
-    <img src="http://azuredeploy.net/deploybutton.png"/>
-</a>
-
-## Checking automatic rolling upgrade status
-
+### REST API
 GET on `/subscriptions/subscription_id/resourceGroups/resource_group/providers/Microsoft.Compute/virtualMachineScaleSets/vmss_name/rollingUpgrades/latest?api-version=2017-03-30`
 
+### Example upgrade status output
 ```
 {
   "properties": {
@@ -148,3 +144,26 @@ GET on `/subscriptions/subscription_id/resourceGroups/resource_group/providers/M
   "location": "southcentralus"
 }
 ```
+
+## Automatic OS Upgrade Execution
+
+Expanding on the description in the Application Health section, VMSS OS Upgrades executes following steps:
+
+1) If more than 20% of instances are Unhealthy, stop the upgrade; otherwise proceed.
+2) Identify the next batch of VM instances to upgrade, with a batch having maximum 20% of total instance count.
+3) Upgrade the OS of the next batch of VM instances.
+4) If more than 20% of upgraded instances are Unhealthy, stop the upgrade; otherwise proceed.
+5) If the customer has configured Application Health Probes, the upgrade will wait up to 5 minutes for probes to become healthy, then will immediately continue onto the next batch; otherwise, it will wait 30 minutes before moving on to the next batch.
+6) If there are remaining instances to upgrade, goto step 1) for the next batch; otherwise the upgrade is complete.
+
+The VMSS OS Upgrade Engine checks for the overall VM instance health before upgrading every batch. While upgrading a batch, there may be other concurrent Planned or Unplanned maintenance happening in Azure Datacenters that may impact availbility of your VMs. Hence, it is possible that temporarily more than 20% instances may be down. In such cases, at the end of current batch VMSS will stop the upgrade.
+
+## Example template
+
+### <a href='https://github.com/Azure/vm-scale-sets/blob/master/preview/upgrade/autoupdate.json'>Automatic rolling upgrades - Ubuntu 16.04-LTS</a>
+
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2Fvm-scale-sets%2Fmaster%2Fpreview%2Fupgrade%2Fautoupdate.json" target="_blank">
+    <img src="http://azuredeploy.net/deploybutton.png"/>
+</a>
+
+
