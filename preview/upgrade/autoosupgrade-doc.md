@@ -103,8 +103,8 @@ Update-AzureRmVmss -ResourceGroupName $rgname -VMScaleSetName $vmssname -Virtual
 ```
 - To set this property using Azure CLI (2.0.20 or later):
 ```CLI
-rgname=myresourcegroup
-vmssname=myvmss
+rgname="myresourcegroup"
+vmssname="myvmss"
 az vmss update --name $vmssname --resource-group $rgname --set upgradePolicy.AutomaticOSUpgrade=true
 ```
 
