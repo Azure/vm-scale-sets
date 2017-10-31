@@ -13,7 +13,7 @@ Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Compute
 
 ```
 
-## Notea 
+## Notes 
 - Do not use for production workloads while in preview - no SLA or guarantees.
 - Initially automatic OS upgrades only support 3 OS skus (see below)
 - Autoscale is not yet supported, and will fail when auto or rolling upgrade is configured.
