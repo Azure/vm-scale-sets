@@ -19,7 +19,24 @@ Automatic OS upgrade has the following characteristics:
 - Azure disk encryption (currently in preview) is __not__ currently supported with VM scale set automatic OS upgrade.
 - Portal experience coming soon.
 
-## Pre-requisites
+## Registering to use Automatic OS Upgrade
+You can register for the automated OS upgrade feature by running these Azure PowerShell commands:
+
+```
+Register-AzureRmProviderFeature -ProviderNamespace Microsoft.Compute -FeatureName AutoOSUpgradePreview
+# Wait 10 minutes until registration state transitions to 'Registered' (check using Get-AzureRmProviderFeature)
+Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Compute
+```
+
+To use application health probes, register for application health feature by running these Azure PowerShell commands:
+
+```
+Register-AzureRmProviderFeature -ProviderNamespace Microsoft.Network -FeatureName AllowVmssHealthProbe
+# Wait 10 minutes until registration state transitions to 'Registered' (check using Get-AzureRmProviderFeature)
+Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Network
+```
+
+## Supported OS images
 Automatic OS upgrades may be enabled when the following conditions are met:
 
 	The OS image is a platform Image, and in the VMSS model the Version = _latest_.
@@ -63,24 +80,6 @@ The load-balancer probe can be referenced in the networkProfile of the VMSS and 
   },
   "networkInterfaceConfigurations":
   ...
-```
-### 
-
-## Registering to use Automatic OS Upgrade
-You can register for the automated OS upgrade feature by running these Azure PowerShell commands:
-
-```
-Register-AzureRmProviderFeature -ProviderNamespace Microsoft.Compute -FeatureName AutoOSUpgradePreview
-# Wait 10 minutes until registration state transitions to 'Registered' (check using Get-AzureRmProviderFeature)
-Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Compute
-```
-
-To use application health probes, register for application health feature by running these Azure PowerShell commands:
-
-```
-Register-AzureRmProviderFeature -ProviderNamespace Microsoft.Network -FeatureName AllowVmssHealthProbe
-# Wait 10 minutes until registration state transitions to 'Registered' (check using Get-AzureRmProviderFeature)
-Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Network
 ```
 
 ## Enforcing an OS image upgrade policy across your subscription
