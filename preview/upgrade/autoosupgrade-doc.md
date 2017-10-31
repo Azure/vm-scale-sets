@@ -21,16 +21,18 @@ Automatic OS upgrade has the following characteristics:
 ## Registering to use Automatic OS Upgrade
 You can register for the automated OS upgrade feature by running these Azure PowerShell commands:
 
-```
+```powershell
 Register-AzureRmProviderFeature -ProviderNamespace Microsoft.Compute -FeatureName AutoOSUpgradePreview
+
 # Wait 10 minutes until registration state transitions to 'Registered' (check using Get-AzureRmProviderFeature)
 Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Compute
 ```
 
 To use application health probes (recommended), register for application health feature by running these Azure PowerShell commands:
 
-```
+```powershell
 Register-AzureRmProviderFeature -ProviderNamespace Microsoft.Network -FeatureName AllowVmssHealthProbe
+
 # Wait 10 minutes until registration state transitions to 'Registered' (check using Get-AzureRmProviderFeature)
 Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Network
 ```
@@ -41,20 +43,11 @@ Only OS platform images are currently supported (i.e. not custom images you crea
 
 The following SKUs are currently supported (more will be added):
 	
-		Publisher: MicrosoftWindowsServer
-		Offer: WindowsServer
-		Sku: 2012-R2-Datacenter
-		Version: latest
-		
-		Publisher: MicrosoftWindowsServer
-		Offer: WindowsServer
-		Sku: 2016-Datacenter
-		Version: latest
-
-		Publisher: Canonical
-		Offer: UbuntuServer
-		Sku: 16.04-LTS
-		Version: latest
+| Publisher               | Offer         |  Sku               | Version  |
+|-------------------------|---------------|--------------------|----------|
+| MicrosoftWindowsServer  | WindowsServer | 2012-R2-Datacenter | latest   |
+|  MicrosoftWindowsServer | WindowsServer | 2016-Datacenter    | latest   |
+| Canonical               | UbuntuServer  | 16.04-LTS          | latest  |
 
 
 ## Application Health
@@ -70,7 +63,8 @@ Note: if the scale set is configured to use multiple placement groups, probes us
 As a best practice, a new load-balancer probe should be created explicitly for scale set health. The same endpoint for an existing HTTP probe or TCP probe may be used, but a health probe may require different behavior than that of a traditional load-balancer probe. For example, a traditional load balancer probe may return unhealthy if the load on the instance is too high, whereas that may not be appropriate for determining the instance health during an automatic OS upgrade. The probe should also be set up to have a high probing rate of less than 2 minutes.
 
 The load-balancer probe can be referenced in the networkProfile of the scale set and can be associated with either an internal or public facing load-balancer:
-```
+
+```json
 "networkProfile": {
   "healthProbe" : {
     "id": "[concat(variables('lbId'), '/probes/', variables('sshProbeName'))]"
@@ -81,28 +75,35 @@ The load-balancer probe can be referenced in the networkProfile of the scale set
 
 ## Enforcing an OS image upgrade policy across your subscription
 For safe upgrades, it is highly recommended to enforce an upgrade policy, which can include require application health probes, across your subscription. You can do this by applying the following ARM policy to your subscription, which will reject deployments that do not have automated OS image upgrade settings configured:
-```
-1. Get builtin ARM policy definition: 
+
+1. Get builtin ARM policy definition:
+
+```powershell
 $policyDefinition = Get-AzureRmPolicyDefinition -Id "/providers/Microsoft.Authorization/policyDefinitions/465f0161-0087-490a-9ad9-ad6217f4f43a"
+```
 
-2. Assign policy to a subscription: 
+2. Assign policy to a subscription:
+
+```powershell
 New-AzureRmPolicyAssignment -Name "Enforce automatic OS upgrades with app health checks" -Scope "/subscriptions/<SubscriptionId>" -PolicyDefinition $policyDefinition
-
 ```
 
 ## How to configure auto-updates
 
 - Ensure the automaticOSUpgrade property is set to true in the scale set model definition.
 - To set this property using PowerShell (4.4.1 or later):
-```PowerShell
+
+```powershell
 $rgname = myresourcegroup
 $vmssname = myvmss
 $vmss = Get-AzureRmVMss -ResourceGroupName $rgname -VmScaleSetName $vmssname
 $vmss.UpgradePolicy.AutomaticOSUpgrade = $true
 Update-AzureRmVmss -ResourceGroupName $rgname -VMScaleSetName $vmssname -VirtualMachineScaleSet $vmss
 ```
+
 - To set this property using Azure CLI (2.0.20 or later):
-```CLI
+
+```azure-cli
 rgname="myresourcegroup"
 vmssname="myvmss"
 az vmss update --name $vmssname --resource-group $rgname --set upgradePolicy.AutomaticOSUpgrade=true
@@ -112,13 +113,13 @@ az vmss update --name $vmssname --resource-group $rgname --set upgradePolicy.Aut
 
 To check the status of the most recent OS upgrade performed on your scale set using Azure PowerShell (4.4.1 or later):
 
-```PowerShell
+```powershell
 Get-AzureRmVmssRollingUpgrade -ResourceGroupName rgname -VMScaleSetName vmssname
 ```
 
 To check the status using Azure CLI (2.0.20 or later):
 
-```CLI
+```azure-cli
 az vmss rolling-upgrade get-latest --name vmssname --resource-group rgname
 ```
 
@@ -126,7 +127,7 @@ az vmss rolling-upgrade get-latest --name vmssname --resource-group rgname
 GET on `/subscriptions/subscription_id/resourceGroups/resource_group/providers/Microsoft.Compute/virtualMachineScaleSets/scaleset_name/rollingUpgrades/latest?api-version=2017-03-30`
 
 ### Example upgrade status output
-```
+```json
 {
   "properties": {
     "policy": {
