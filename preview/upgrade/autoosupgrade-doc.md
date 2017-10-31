@@ -105,7 +105,7 @@ Expanding on the description in the Application Health section, VMSS OS Upgrades
 2) Identify the next batch of VM instances to upgrade, with a batch having maximum 20% of total instance count.
 3) Upgrade the OS of the next batch of VM instances.
 4) If more than 20% of upgraded instances are Unhealthy, stop the upgrade; otherwise proceed.
-5) If the customer has configured Application Health Probes, the upgrade will continue immediately to the next batch; otherwise, it will wait 30 minutes before moving on to the next batch.
+5) If the customer has configured Application Health Probes, the upgrade will wait up to 5 minutes for probes to become healthy, then will immediately continue onto the next batch; otherwise, it will wait 30 minutes before moving on to the next batch.
 6) If there are remaining instances to upgrade, goto step 1) for the next batch; otherwise the upgrade is complete.
 
 The VMSS OS Upgrade Engine checks for the overall VM instance health before upgrading every batch. While upgrading a batch, there may be other concurrent Planned or Unplanned maintenance happening in Azure Datacenters that may impact availbility of your VMs. Hence, it is possible that temporarily more than 20% instances may be down. In such cases, at the end of current batch VMSS will stop the upgrade.
