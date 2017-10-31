@@ -20,7 +20,7 @@ Automatic OS upgrade has the following characteristics:
 - Portal experience coming soon.
 
 ## Pre-requisites
-Automatic OS upgrades are offered when the following conditions are met:
+Automatic OS upgrades may be enabled when the following conditions are met:
 
 	The OS image is a platform Image, and in the VMSS model the Version = _latest_.
     
@@ -51,7 +51,8 @@ A VMSS can can optionally be configured with Application Health Probes to provid
 
 ### Configuring a Custom Load Balancer Probe as Application Health Probe on a VMSS
 
-As a best practice, a new load balancer probe should be created explicitly for VMSS health. The same endpoint for an existing HTTP probe or TCP probe may be used, but a health probe may require different behavior than that of a traditional load-balancer probe. For example, a traditional load-balancer probe may return unhealthy if the load on the instance is too high, whereas that may not be appropriate for determining the instance health during an automatic OS upgrade. The probe should also be set up to have a high probing rate.
+
+As a best practice, a new load-balancer probe should be created explicitly for VMSS health. The same endpoint for an existing HTTP probe or TCP probe may be used, but a health probe may require different behavior than that of a traditional load-balancer probe. For example, a traditional load-balancer probe may return unhealthy if the load on the instance is too high, whereas that may not be appropriate for determining the instance health during an automatic OS upgrade. The probe should also be set up to have a high probing rate. < Sean: Nathan, what is the restriction that we enforce here?>
 
 The load-balancer probe can be referenced in the networkProfile of the VMSS and can be associated with either an internal or public facing load-balancer:
 ```
@@ -94,29 +95,28 @@ New-AzureRmPolicyAssignment -Name "Enforce automatic OS upgrades with app health
 
 ## How to configure auto-updates
 
-- Ensure automaticOSUpgrade property is set to true in the VMSS model definition. 
+- Ensure the automaticOSUpgrade property is set to true in the VMSS model definition. 
 
-## Automatic OS Upgrade Policy
+## Automatic OS Upgrade Execution
 
-Expanding on the description above, VMSS OS Upgrades execute with the following steps:
+Expanding on the description in the Application Health section, VMSS OS Upgrades executes following steps:
 
-1) Identify the next batch of VM instances to upgrade, with a batch having maximum 20% of total instance count.
-2) If more than 20% of instances are Unhealthy, stop the upgrade; otherwise continue.
-3) Upgrade the next batch of VM instances.
-4) If more than 20% of upgraded instances are Unhealthy, stop the upgrade; otherwise continue.
+1) If more than 20% of instances are Unhealthy, stop the upgrade; otherwise proceed.
+2) Identify the next batch of VM instances to upgrade, with a batch having maximum 20% of total instance count.
+3) Upgrade the OS of the next batch of VM instances.
+4) If more than 20% of upgraded instances are Unhealthy, stop the upgrade; otherwise proceed.
 5) If the customer has configured Application Health Probes, the upgrade will continue immediately to the next batch; otherwise, it will wait 30 minutes before moving on to the next batch.
-6) If there are remaining instances to upgrade, move back to step 2) for the next batch; otherwise the upgrade is complete.
+6) If there are remaining instances to upgrade, goto step 1) for the next batch; otherwise the upgrade is complete.
 
 The VMSS OS Upgrade Engine checks for the overall VM instance health before upgrading every batch. While upgrading a batch, there may be other concurrent Planned or Unplanned maintenance happening in Azure Datacenters that may impact availbility of your VMs. Hence, it is possible that temporarily more than 20% instances may be down. In such cases, at the end of current batch VMSS will stop the upgrade.
 
 ## VMSS Rolling Upgrades
 
-VMSS Automatic OS Upgrades, leverages a Rolling Upgrader Engine underneath, that updates a Batch of VM instances at a time, checks the instance health, and drives the update to completion. It is now possible for the customers to leverage this Rolling Upgrader, to drive their own updates to a VMSS.
+VMSS Automatic OS Upgrades, leverages a Rolling Upgrade Engine underneath, that updates a Batch of VM instances at a time, checks the instance health, and drives the update to completion. It is now possible for the customers to leverage this Rolling Upgrade, to drive their own updates to a VMSS.
+<Sean: we need to explain that this configuration is not used during Automatic OS Upgrades, otherwise people may think that these policies override the Automatic OS Upgrade defaults>
 
 - Syntax
 ```
-
-SEAN TO CHECK and confirm, this property bag for Rolling Upgrades. Also to check where the AutomaticOSUpgrade element is.
 
 "upgradePolicy": {
     "mode": "Rolling", // Must be "Rolling" for manual upgrades; can be anything for automatic OS upgrades
@@ -140,7 +140,7 @@ The time duration should be specified in ISO 8601 format for duration (https://e
 The default value is 0 seconds (PT0S).
 
 __maxUnhealthyInstancePercent__ -         
-The maximum percentage of the total virtual machine instances in the scale set that can be simultaneously unhealthy, either as a result of being upgraded, or by being found in an unhealthy state by the virtual machine health checks before the rolling upgrade aborts. This constraint will be checked prior to starting any batch.
+The maximum percentage of the total virtual machine instances in the VM Scale Set that can be simultaneously unhealthy, either as a result of being upgraded, or by being found in an unhealthy state by the virtual machine health checks before the rolling upgrade aborts. This constraint will be checked prior to starting any batch.
 The default value for this parameter is 20.
 
 __maxUnhealthyUpgradedInstancePercent__ – 
@@ -148,7 +148,7 @@ The maximum percentage of upgraded virtual machine instances that can be found t
 The default value for this parameter is 20.
 
 ## Adding a load-balancer probe for determining health of the rolling upgrade
-Before the VMSS can be created or moved into rolling upgrade mode, a load-balancer probe used to determine VM instance health must be added.
+Before the VMSS can be created or moved into rolling upgrade mode, a load-balancer probe used to determine VM instance health must be added to the VM Scale Set in the networkProfile.healthProbe.id property.
 
 
 ## Example templates
