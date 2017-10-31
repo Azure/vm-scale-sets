@@ -48,6 +48,7 @@ During an OS Upgrade, VM instances in a VMSS are upgraded one batch at a time. T
 
 A VMSS can can optionally be configured with Application Health Probes to provide the platform with accurate information on the ongoing state of the application. Application Health Probes are Custom Load Balancer Probes which are used as a health signal. The customer application on a VMSS VM instance can respond to external HTTP or TCP requests indicating whether it is healthy. For more documentation on how Custom Load Balancer Probes work <a href='https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-custom-probe-overview'>follow this link</a>. An Application Health Probe is not required for automatic OS upgrades, but it is highly recommended.
 
+Note: if the VMSS is configured to use multiple placement groups, probes using a <a href='https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-standard-overview'>Standard Load Balancer</a> will need to be used.
 
 ### Configuring a Custom Load Balancer Probe as Application Health Probe on a VMSS
 
