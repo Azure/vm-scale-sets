@@ -1,6 +1,6 @@
 # Azure VM scale set automatic OS upgrades
 
-Automatic OS image upgrade is a new preview feature for Azure VM scale sets which automatically upgrades all VMs to the latest OS image.
+Automatic OS image upgrade is a preview feature for Azure VM scale sets which automatically upgrades all VMs to the latest OS image.
 
 Automatic OS upgrade has the following characteristics:
 - Once configured, the latest OS image published by image publishers is automatically applied to the scale set without user intervention.
@@ -13,9 +13,8 @@ Automatic OS upgrade has the following characteristics:
 
 
 ## Preview notes 
-- While in preview, automatic OS upgrades only support 3 OS SKUs (see below), and have no SLA or guarantees. We would love to get your feedback, but it is recommended to not enable them on production critical workloads during preview.
+- While in preview, automatic OS upgrades only support 3 OS SKUs (see below), and have no SLA or guarantees. It is recommended to not enable them on production critical workloads during preview.
 - Support for scale sets in Service Fabric clusters is coming soon.
-- Azure autoscale is __not__ currently supported with VM scale set automatic OS upgrade.
 - Azure disk encryption (currently in preview) is __not__ currently supported with VM scale set automatic OS upgrade.
 - Portal experience coming soon.
 
@@ -28,7 +27,7 @@ Register-AzureRmProviderFeature -ProviderNamespace Microsoft.Compute -FeatureNam
 Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Compute
 ```
 
-To use application health probes, register for application health feature by running these Azure PowerShell commands:
+To use application health probes (recommended), register for application health feature by running these Azure PowerShell commands:
 
 ```
 Register-AzureRmProviderFeature -ProviderNamespace Microsoft.Network -FeatureName AllowVmssHealthProbe
@@ -37,11 +36,10 @@ Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Network
 ```
 
 ## Supported OS images
-Automatic OS upgrades may be enabled when the following conditions are met:
 
-	The OS image is a platform Image, and in the VMSS model the Version = _latest_.
-    
-    The following SKUs are currently supported (more will be added):
+Only OS platform images are currently supported (i.e. not custom images you created yourself). The _version_ proerty must be set to _latest_.
+
+The following SKUs are currently supported (more will be added):
 	
 		Publisher: MicrosoftWindowsServer
 		Offer: WindowsServer
@@ -61,17 +59,17 @@ Automatic OS upgrades may be enabled when the following conditions are met:
 
 ## Application Health
 
-During an OS Upgrade, VM instances in a VMSS are upgraded one batch at a time. The upgrade should continue only if the customer application is healthy on the upgraded VM instances. Therefore it is recommended that the application provide health signals to the VMSS OS Upgrade engine. By default, during OS Upgrades the platform considers VM Powerstate and Extension Provisioning State to determine if a VM instance is healthy after an upgrade. During the OS Upgrade of a VM instance, the OS Disk on a VM instance is replaced with a new disk based on latest image version. After the OS Upgrade has completed, the configured extensions are run on these VMs. Only when all the extensions on a VM have Provision Success state, is the application considered healthy. 
+During an OS Upgrade, VM instances in a scale set are upgraded one batch at a time. The upgrade should continue only if the customer application is healthy on the upgraded VM instances. Therefore it is recommended that the application provide health signals to the scale set OS Upgrade engine. By default, during OS Upgrades the platform considers VM power state and extension provisioning State to determine if a VM instance is healthy after an upgrade. During the OS Upgrade of a VM instance, the OS Disk on a VM instance is replaced with a new disk based on latest image version. After the OS Upgrade has completed, the configured extensions are run on these VMs. Only when all the extensions on a VM are successfully provisioned, is the application considered healthy. 
 
-A VMSS can can optionally be configured with Application Health Probes to provide the platform with accurate information on the ongoing state of the application. Application Health Probes are Custom Load Balancer Probes which are used as a health signal. The customer application on a VMSS VM instance can respond to external HTTP or TCP requests indicating whether it is healthy. For more documentation on how Custom Load Balancer Probes work <a href='https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-custom-probe-overview'>follow this link</a>. An Application Health Probe is not required for automatic OS upgrades, but it is highly recommended.
+A scale set can optionally be configured with Application Health Probes to provide the platform with accurate information on the ongoing state of the application. Application Health Probes are Custom Load Balancer Probes which are used as a health signal. The application running on a scale set VM instance can respond to external HTTP or TCP requests indicating whether it is healthy. For more documentation on how Custom Load Balancer Probes work refer to (Understand load balancer probes)[https://docs.microsoft.com/azure/load-balancer/load-balancer-custom-probe-overview]. An Application Health Probe is not required for automatic OS upgrades, but it is highly recommended.
 
-Note: if the VMSS is configured to use multiple placement groups, probes using a <a href='https://docs.microsoft.com/en-us/azure/load-balancer/load-balancer-standard-overview'>Standard Load Balancer</a> will need to be used.
+Note: if the scale set is configured to use multiple placement groups, probes using a (Standard Load Balancer)[https://docs.microsoft.com/azure/load-balancer/load-balancer-standard-overview] will need to be used.
 
-### Configuring a Custom Load Balancer Probe as Application Health Probe on a VMSS
+### Configuring a Custom Load Balancer Probe as Application Health Probe on a scale set
 
-As a best practice, a new load-balancer probe should be created explicitly for VMSS health. The same endpoint for an existing HTTP probe or TCP probe may be used, but a health probe may require different behavior than that of a traditional load-balancer probe. For example, a traditional load-balancer probe may return unhealthy if the load on the instance is too high, whereas that may not be appropriate for determining the instance health during an automatic OS upgrade. The probe should also be set up to have a high probing rate of less than 2 minutes.
+As a best practice, a new load-balancer probe should be created explicitly for scale set health. The same endpoint for an existing HTTP probe or TCP probe may be used, but a health probe may require different behavior than that of a traditional load-balancer probe. For example, a traditional load balancer probe may return unhealthy if the load on the instance is too high, whereas that may not be appropriate for determining the instance health during an automatic OS upgrade. The probe should also be set up to have a high probing rate of less than 2 minutes.
 
-The load-balancer probe can be referenced in the networkProfile of the VMSS and can be associated with either an internal or public facing load-balancer:
+The load-balancer probe can be referenced in the networkProfile of the scale set and can be associated with either an internal or public facing load-balancer:
 ```
 "networkProfile": {
   "healthProbe" : {
@@ -94,28 +92,38 @@ New-AzureRmPolicyAssignment -Name "Enforce automatic OS upgrades with app health
 
 ## How to configure auto-updates
 
-- Ensure the automaticOSUpgrade property is set to true in the VMSS model definition. 
+- Ensure the automaticOSUpgrade property is set to true in the scale set model definition.
+- To set this property using PowerShell (4.4.1 or later):
+```PowerShell
+$rgname = myresourcegroup
+$vmssname = myvmss
+$vmss = Get-AzureRmVMss -ResourceGroupName $rgname -VmScaleSetName $vmssname
+$vmss.UpgradePolicy.AutomaticOSUpgrade = $true
+Update-AzureRmVmss -ResourceGroupName $rgname -VMScaleSetName $vmssname -VirtualMachineScaleSet $vmss
+```
+- To set this property using Azure CLI (2.0.20 or later):
+```CLI
+rgname=myresourcegroup
+vmssname=myvmss
+az vmss update --name $vmssname --resource-group $rgname --set upgradePolicy.AutomaticOSUpgrade=true
+```
 
 ## Checking the status of an automatic OS upgrade
 
-You can check the status of the most recent OS upgrade performed on your scale set using Azure PowerShell or CLI.
-
-### Azure PowerShell
-Make sure Azure PowerShell 4.4.1 or later (October 2017) is installed.
+To check the status of the most recent OS upgrade performed on your scale set using Azure PowerShell (4.4.1 or later):
 
 ```PowerShell
 Get-AzureRmVmssRollingUpgrade -ResourceGroupName rgname -VMScaleSetName vmssname
 ```
 
-### Azure CLI (including Azure Cloud Shell)
-Make sure Azure PowerShell 2.0.20 or later is installed.
+To check the status using Azure CLI (2.0.20 or later):
 
 ```CLI
 az vmss rolling-upgrade get-latest --name vmssname --resource-group rgname
 ```
 
 ### REST API
-GET on `/subscriptions/subscription_id/resourceGroups/resource_group/providers/Microsoft.Compute/virtualMachineScaleSets/vmss_name/rollingUpgrades/latest?api-version=2017-03-30`
+GET on `/subscriptions/subscription_id/resourceGroups/resource_group/providers/Microsoft.Compute/virtualMachineScaleSets/scaleset_name/rollingUpgrades/latest?api-version=2017-03-30`
 
 ### Example upgrade status output
 ```
@@ -147,7 +155,7 @@ GET on `/subscriptions/subscription_id/resourceGroups/resource_group/providers/M
 
 ## Automatic OS Upgrade Execution
 
-Expanding on the description in the Application Health section, VMSS OS Upgrades executes following steps:
+Expanding on the description in the Application Health section, scale set OS Upgrades execute following steps:
 
 1) If more than 20% of instances are Unhealthy, stop the upgrade; otherwise proceed.
 2) Identify the next batch of VM instances to upgrade, with a batch having maximum 20% of total instance count.
@@ -156,7 +164,7 @@ Expanding on the description in the Application Health section, VMSS OS Upgrades
 5) If the customer has configured Application Health Probes, the upgrade will wait up to 5 minutes for probes to become healthy, then will immediately continue onto the next batch; otherwise, it will wait 30 minutes before moving on to the next batch.
 6) If there are remaining instances to upgrade, goto step 1) for the next batch; otherwise the upgrade is complete.
 
-The VMSS OS Upgrade Engine checks for the overall VM instance health before upgrading every batch. While upgrading a batch, there may be other concurrent Planned or Unplanned maintenance happening in Azure Datacenters that may impact availbility of your VMs. Hence, it is possible that temporarily more than 20% instances may be down. In such cases, at the end of current batch VMSS will stop the upgrade.
+The scale set OS Upgrade Engine checks for the overall VM instance health before upgrading every batch. While upgrading a batch, there may be other concurrent Planned or Unplanned maintenance happening in Azure Datacenters that may impact availbility of your VMs. Hence, it is possible that temporarily more than 20% instances may be down. In such cases, at the end of current batch, the scale set upgrade will stop.
 
 ## Example template
 
