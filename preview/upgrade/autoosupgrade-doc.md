@@ -98,29 +98,27 @@ Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Network
 
 ## How to configure auto-updates
 
-- Ensure automaticOSUpgrade property is set to true in the VMSS model definition. 
+- Ensure the automaticOSUpgrade property is set to true in the VMSS model definition. 
 
 ## Automatic OS Upgrade Policy
 
-A VM scale set can have instances spread across single or multiple Placement Groups. As described above, VMSS OS Upgrades executes following steps:
+Expanding on the description in the Application Health section, VMSS OS Upgrades executes following steps:
 
-1) Identifies the batch of VM instances to upgrade, with a batch having maximum 20% of total instance count
-2) If more than 20% of instances are UnHealthy, stop the upgrade, otherwise proceed.
-3) Upgrades the next batch of VM instances
-4) If more than 20% of upgraded instances are UnHealthy, stop the upgrade, otherwise proceed.
-5) If the customer has opted in for Application Health Probes, continue immediately to the next batch otherwise wait 30 min between batches.
-6) If there are remaining instances to upgrade, goto 2) for the next batch, else upgrade is complete
+1) If more than 20% of instances are Unhealthy, stop the upgrade, otherwise proceed.
+2) Identifies the next batch of VM instances to upgrade, with a batch having maximum 20% of total instance count
+3) Upgrade the next batch of VM instances.
+4) If more than 20% of upgraded instances are Unhealthy, stop the upgrade, otherwise proceed.
+5) If the customer has opted in for Application Health Probes, continue immediately to the next batch, otherwise wait 30 min between batches.
+6) If there are remaining instances to upgrade, goto 1) starting the upgrade for the next batch, else the upgrade is complete.
 
-VMSS OS Upgrade Engine checks for the overall VM instance health before upgrading every batch. While upgrading a batch, there may be other concurrent Planned or UnPlanned maintenance happening in Azure Datacenters that may impact availbility of your VMs. Hence, it is possible that temporarily more than 20% instances may be down. In such cases, at the end of current batch VMSS will stop the upgrade.
+VMSS OS Upgrade Engine checks for the overall VM instance health before upgrading every batch. While upgrading a batch, there may be other concurrent Planned or Unplanned maintenance happening in Azure Datacenters that may impact availbility of your VMs. Hence, it is possible that temporarily more than 20% instances may be down. In such cases, at the end of current batch VMSS will stop the upgrade.
 
 ## VMSS Rolling Upgrades
 
-VMSS Automatic OS Upgrades, leverages a Rolling Upgrador Engine underneath, that updates a Batch of VM instances at a time, checks the instance health, and drives the update to completion. It is now possible for the customers to leverage this Rolling Upgrador, to drive their own updates to a VMSS.
+VMSS Automatic OS Upgrades, leverages a Rolling Upgrader Engine underneath, that updates a Batch of VM instances at a time, checks the instance health, and drives the update to completion. It is now possible for the customers to leverage this Rolling Upgrader, to drive their own updates to a VMSS.
 
 - Syntax
 ```
-
-SEAN TO CHECK and confirm, this property bag for Rolling Upgrades. Also to check where the AutomaticOSUpgrade element is.
 
 "upgradePolicy": {
     "mode": "Rolling", // Must be "Rolling" for manual upgrades; can be anything for automatic OS upgrades
