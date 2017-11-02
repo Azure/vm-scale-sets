@@ -1,6 +1,6 @@
 # Azure VM scale set Availability Zones preview
 
-Last update: 10/5/2017.
+Last update: 10/26/2017.
 
 Welcome to the Azure VM scale sets on Availability Zones preview. For more information about Availability Zones, go here: [Overview of Availability Zones in Azure (Preview)](https://docs.microsoft.com/en-us/azure/availability-zones/az-overview).
 
