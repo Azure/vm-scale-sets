@@ -6,7 +6,7 @@ Status (10/30/2017): VMSS disk encryption is a preview feature which requires se
 
 ## Caveats
 - No Linux OS disk encryption in the current preview.
-- VMSS VM reimage and upgrade operations not supported in current preview. Do not use in production environments where you might need to upgrade your OS image in an encrypted scale set.
+- VMSS VM reimage and image upgrade operations not supported in current preview. Do not use in production environments where you might need to upgrade or change your OS image in an encrypted scale set.
 - VMSS encryption is supported only for scale sets created with __managed disks__, and not supported for native (or unmanaged) disk scale sets.
 
 ## Opt-in to ADE-VMSS preview: 
