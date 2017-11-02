@@ -4,7 +4,7 @@ Param(
     [int]$startCount = 1
   )
 
-  # variable to track the number of started instances
+# variable to track the number of started instances
 $started = 0
 
 # get a list of VMSS VMs - note the -InstanceView argument is not working in list mode
