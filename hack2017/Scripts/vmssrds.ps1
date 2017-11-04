@@ -12,7 +12,7 @@ $id_string = ''
 $vmss_vms = Get-AzureRmVmssVM -ResourceGroupName $resourceGroup -VMScaleSetName $vmssName
 
 ForEach ($vm in $vmss_vms) {
-    Write-Host 'Processing instance: ' $vm.InstanceID
+    Write-Host 'Processing instance:' $vm.InstanceID
     $vm_instance_view = Get-AzureRmVmssVM -ResourceGroupName $resourceGroup -VMScaleSetName $vmssName -InstanceId $vm.InstanceID -InstanceView
     # Write-Host $vm_instance_view.Statuses[1].Code
     if ($vm_instance_view.Statuses[1].Code -eq 'PowerState/deallocated') {
@@ -27,9 +27,9 @@ ForEach ($vm in $vmss_vms) {
     }
 }
 if ($count -gt 0) {
-    Write-Host 'Starting ' $count ' instances: ' $id_string
+    Write-Host 'Starting' $count 'instance(s):' $id_string
     Invoke-Expression -Command "start-azurermvmss -ResourceGroupName $resourceGroup -VMScaleSetName $vmssName -InstanceId $id_string"
 }
 else {
-    Write-Host 'No deallocated instances found in scale set: ' $vmssName
+    Write-Host 'No deallocated instances found in scale set:' $vmssName
 }
