@@ -141,15 +141,7 @@ Sometimes you may want to just re-set your existing scale set to factory setting
 
 Q. When a particular batch of VMs is picked for upgrade. Does this model ensure the existing HTTP connections are allowed to drain, and no new HTTP requests will be routed to the VMs in this batch, till deployment is complete? 
 
-A. The next batch does not start upgrading until the previous batch has completed being upgraded. 
-Add a custom health probe for your load balancer that can report unhealthy on your custom health probe when your OS receives a shutdown notification. Delay OS shutdown until you are no longer receiving traffic (you have been reporting unhealthy on your health probe for long enough).
-
-There is no in built mechanism, the recommendation is to stop and start traffic using custom load balancer probes.
-
-The health probe need not be your website though, you can create a synthetic API that responds healthy always unless you are undergoing an update, or about to undergo an update or reboot.
-
-There is no in built mechanism for draining, it is up to your app to stop and start traffic using custom loadbalancer probes. E.g. you can create a synthetic API that responds healthy always unless you are undergoing an update, or about to undergo an update or reboot.
-
+A. The next batch does not start upgrading until the previous batch has completed being upgraded, and no new connections will be sent to VMs failing the health probe. However, there is currently no way to drain the existing connections to the VMs that are taken down by a rolling upgrade.
 
 ## Example templates
 
