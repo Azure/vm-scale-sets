@@ -2,7 +2,7 @@
 
 Welcome to the VM scale set automatic OS image upgrade preview. This readme also covers manually triggered rolling upgrades. 
 
-Last update: 10/31/17.
+Last update: 12/13/17.
 
 You need to register for the automated OS upgrade feature in order to use it:
 
@@ -24,7 +24,7 @@ Automatic OS upgrades are offered when the following conditions are met:
 	The OS image is a platform Image only with Version = _latest_.
     
     The following SKUs during the intial preview (more will be added):
-	
+	```
 		Publisher: MicrosoftWindowsServer
 		Offer: WindowsServer
 		Sku: 2012-R2-Datacenter
@@ -35,11 +35,16 @@ Automatic OS upgrades are offered when the following conditions are met:
 		Sku: 2016-Datacenter
 		Version: latest
 
+		Publisher: MicrosoftWindowsServer
+		Offer: WindowsServer
+		Sku: 2016-Datacenter-smalldisk
+		Version: latest
+
 		Publisher: Canonical
 		Offer: UbuntuServer
 		Sku: 16.04-LTS
 		Version: latest
-
+```
 
 ## When automatic upgrade happens
 - Automatic OS upgrades are triggered when the publisher for your OS sku releases a new image version.
@@ -151,7 +156,7 @@ A. The next batch does not start upgrading until the previous batch has complete
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
-### Automatic rolling upgrades - Ubuntu 16.04-DAILY-LTS for testing
+### Automatic rolling upgrades - Ubuntu 17.10-DAILY for testing
 
 Note: You need a special feature flag on your subscription to use the daily build with automatic updates.
 

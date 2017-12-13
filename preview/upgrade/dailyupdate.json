@@ -22,7 +22,7 @@
   "variables": {
     "imagePublisher": "Canonical",
     "imageOffer": "UbuntuServer",
-    "imageVersion": "16.04-DAILY-LTS",
+    "imageVersion": "17.10-DAILY",
     "addressPrefix": "10.0.0.0/8",
     "namingInfix": "[toLower(parameters('vmssNamePrefix'))]",
 	  "sizeOfDiskInGB": "1023",
