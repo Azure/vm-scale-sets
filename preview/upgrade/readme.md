@@ -24,7 +24,7 @@ Automatic OS upgrades are offered when the following conditions are met:
 	The OS image is a platform Image only with Version = _latest_.
     
     The following SKUs during the intial preview (more will be added):
-	```
+```
 		Publisher: MicrosoftWindowsServer
 		Offer: WindowsServer
 		Sku: 2012-R2-Datacenter
