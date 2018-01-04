@@ -27,8 +27,6 @@ Please provide us with your subscription ID, and we can enroll the scale sets in
 
 ## Checking the status of an automatic extension upgrade
 
-!!! TODO IS THIS VALID FOR EXTENSION UPGRADES? !!!
-
 To check the status of the most recent extension upgrade performed on your scale set using Azure PowerShell (4.4.1 or later):
 
 ```powershell
@@ -42,8 +40,7 @@ az vmss rolling-upgrade get-latest --name vmssname --resource-group rgname
 ```
 
 ### REST API
-!!! TODO IS THIS VALID FOR EXTENSION UPGRADES? !!!
-GET on `/subscriptions/subscription_id/resourceGroups/resource_group/providers/Microsoft.Compute/virtualMachineScaleSets/scaleset_name/extensionRollingUpgrades/latest?api-version=2017-12-01`
+GET on `/subscriptions/subscription_id/resourceGroups/resource_group/providers/Microsoft.Compute/virtualMachineScaleSets/scaleset_name/rollingUpgrades/latest?api-version=2017-12-01`
 
 ## Manually triggering an extension rolling upgrade
 
