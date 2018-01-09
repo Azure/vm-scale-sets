@@ -1,5 +1,5 @@
 ﻿# Azure VM Scale Sets attach-detach disk preview
-Last update 12/12/2017
+Last update 1/9/2017
 
 Welcome to the Azure scale set attach-detach disk preview. This feature makes it possible to attach and detach Managed Disks to and from individual scale set virtual machines. Before this feature, you could only define scale set attached disks centrally in the scale set model, and that definition would apply to all VMs. Now you can do a PUT on an individual VM and attach a disk, or remove that disk and attach it to another VM (as long as there is no LUN collision with the central model). 
 
