@@ -2,19 +2,11 @@
 
 Automatic extension upgrade is a preview feature for Azure VM scale sets which automatically upgrades all VM extensions to the lastest type handler version as the version becomes available in the platform.
 
-Automatic extension upgrade has the following characteristics:
+Automatic extension upgrade has the following characteristics during preview:
 - Once configured, the latest extension type handler patches published by extension publishers are automatically applied to the scale set without user intervention.
 - If autoUpgradeMinorVersion is set to true, new minor versions of the extension type handler are also automatically applied to the scale set without user intervention.
 - Upgrades batches of instances in a rolling manner each time a new version is published by the publisher.
-- Integrates with application health probe (optional, but highly recommended for safety).
-- Works for all extensions.
-- Works for all VM sizes.
-- Works for all VM images (platform and custom).
 
-
-## Preview notes 
-- While in preview, automatic extension upgrades have no SLA or guarantees. It is recommended to not enable them on production critical workloads during preview.
-- Portal experience coming soon.
 
 ## Application Health
 
