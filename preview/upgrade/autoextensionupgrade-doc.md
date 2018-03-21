@@ -6,11 +6,12 @@ Automatic extension upgrade has the following characteristics during preview:
 - Once configured, the latest extension type handler patches published by extension publishers are automatically applied to the scale set without user intervention.
 - If autoUpgradeMinorVersion is set to true, new minor versions of the extension type handler are also automatically applied to the scale set without user intervention.
 - Upgrades batches of instances in a rolling manner each time a new version is published by the publisher.
+- Service Fabric clusters are not eligible for automatic extension upgrades yet.
 
 
 ## Application Health
 
-Automatic extension upgrades have the same application health model as [automatic OS upgrades](./autoosupgrade-doc.md).
+Automatic extension upgrades have the same application health model as [automatic OS upgrades](./autoosupgrade-doc.md). However, there is one difference. Automatic OS upgrades use the load balaner health probe as the health signal. Automatic extension upgrades use both the load balancer health probe and the extension provisioning state as the health signal. This means that automatic extension upgrades will stop partway if either the load balancer health probe fails or the extensions on the scale set fail.
 
 ## How to configure automatic extension updates
 
@@ -36,4 +37,6 @@ GET on `/subscriptions/subscription_id/resourceGroups/resource_group/providers/M
 
 ## Manually triggering an extension rolling upgrade
 
-To manually trigger an extension rolling upgrade, you can do a POST on `/subscription/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachineScaleSets/{resourceName}/ExtensionRollingUpgrade?api-version=2017-12-01`
+To manually trigger an extension rolling upgrade, you can do a POST on `/subscription/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachineScaleSets/{resourceName}/ExtensionRollingUpgrade?api-version=2017-12-01`. To force the upgrade on all VMs in the scale set, even if it causes health probe or extension failures, add the `forceExtensionUpgrade` query parameter:
+
+POST on `/subscription/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/Microsoft.Compute/virtualMachineScaleSets/{resourceName}/ExtensionRollingUpgrade?api-version=2017-12-01&forceExtensionUpgrade=true`
