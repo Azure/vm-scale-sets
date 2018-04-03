@@ -1,10 +1,9 @@
 # Azure VM scale set automatic extension upgrades
 
-Automatic extension upgrade is a preview feature for Azure VM scale sets which automatically upgrades all VM extensions to the lastest type handler version as the version becomes available in the platform.
+Automatic extension upgrade is a preview feature for Azure VM scale sets which automatically upgrades VM extensions to the lastest type handler version as new become available.
 
 Automatic extension upgrade has the following characteristics during preview:
-- Once configured, the latest extension type handler patches published by extension publishers are automatically applied to the scale set without user intervention.
-- If autoUpgradeMinorVersion is set to true, new minor versions of the extension type handler are also automatically applied to the scale set without user intervention.
+- Once configured, the latest minor versions are automatically applied to scale set extensions without user intervention, but only to extensions with autoUpgradeMinorVersion set to true.
 - Upgrades batches of instances in a rolling manner each time a new version is published by the publisher.
 - Service Fabric clusters are not eligible for automatic extension upgrades yet.
 
@@ -20,7 +19,7 @@ Please provide us with your subscription ID, and we can enroll the scale sets in
 
 ## Checking the status of an automatic extension upgrade
 
-To check the status of the most recent extension upgrade performed on your scale set using Azure PowerShell (4.4.1 or later):
+To check the status of the most recent rolling upgrade performed on your scale set using Azure PowerShell (4.4.1 or later):
 
 ```powershell
 Get-AzureRmVmssRollingUpgrade -ResourceGroupName rgname -VMScaleSetName vmssname
@@ -32,8 +31,11 @@ To check the status using Azure CLI (2.0.20 or later):
 az vmss rolling-upgrade get-latest --name vmssname --resource-group rgname
 ```
 
-### REST API
-GET on `/subscriptions/subscription_id/resourceGroups/resource_group/providers/Microsoft.Compute/virtualMachineScaleSets/scaleset_name/rollingUpgrades/latest?api-version=2017-12-01`
+To check the status using the REST API:
+
+`GET /subscriptions/subscription_id/resourceGroups/resource_group/providers/Microsoft.Compute/virtualMachineScaleSets/scaleset_name/rollingUpgrades/latest?api-version=2017-12-01`
+
+Note that this latest rolling upgrade could be an automatic extension upgrade or an automatic OS upgrade.
 
 ## Manually triggering an extension rolling upgrade
 
