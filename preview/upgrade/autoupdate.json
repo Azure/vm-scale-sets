@@ -38,7 +38,7 @@
     "bepoolID": "[concat(variables('lbID'),'/backendAddressPools/', variables('bepoolName'))]",
     "sshProbeName": "sshProbe",
     "networkApiVersion": "2017-04-01",
-    "computeApiVersion": "2017-03-30"
+    "computeApiVersion": "2018-10-01"
   },
   "resources": [
     {
@@ -139,7 +139,9 @@
         "singlePlacementGroup": "true",
         "upgradePolicy": {
           "mode": "Automatic",
-          "automaticOSUpgrade": "true"
+          "automaticOSUpgradePolicy": {
+            "enableAutomaticOSUpgrade": "true"
+	  }
         },
         "overprovision": "true",
         "virtualMachineProfile": {
