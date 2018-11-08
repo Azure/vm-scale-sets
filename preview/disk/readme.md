@@ -218,7 +218,7 @@ The dataDisks section of the VM model would be updated to look like this, and us
 }
 ```
 #### Detach
-Suppose you want to detach the disks that were attached at lun 1 and above. In this case the dataDisks section of the model would be updated like this, followed by a PUT:
+Suppose you want to detach the disks that were attached at lun 1 and lun 3. In this case the dataDisks section of the model would be updated like this, followed by a PUT:
 ```
 "dataDisks": {
     {
