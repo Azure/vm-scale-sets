@@ -1,7 +1,7 @@
 // Deploy VMSS Flex into a subscription. 
 // This will create and deploy resources at subscription scope into Resource Group rgName
 // bicep template. Bicep reference: https://aka.ms/bicep
-// az deployment sub create -n myflexdeploy -l eastus2euap -f main.vmssflex.bicep --parameters rgName=myResourceGroup vmssName=vmssflex01 vmCount=2
+// az deployment sub create -n myflexdeploy -l westus2 -f main.bicep --parameters rgName=MyResourceGroup
 targetScope= 'subscription'
 
 param rgName string = 'vmss-flex-cassandra-demo'
@@ -91,6 +91,11 @@ module vmssFlexWebTier './compute/vmssflex.bicep' = {
     vmCount: 3
     vmSize: 'Standard_D2s_v4'
     platformFaultDomainCount: 1
+    priority: 'Spot'
+    spotEvictionPolicy: 'Delete'
+    spotBillingProfile: {
+      maxPrice: -1
+    }
     subnetId: basenetwork.outputs.vnetSubnetArray[0].id
     appGwBackendPoolArray: appgw.outputs.appGwBackendPoolArray
   }

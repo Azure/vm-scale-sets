@@ -17,6 +17,21 @@ param subnetId string
 param lbBackendPoolArray array = []
 param appGwBackendPoolArray array = []
 
+@allowed([
+  'Regular'
+  'Spot'
+])
+param priority string = 'Regular'
+@allowed([
+  'Deallocate'
+  'Delete'
+  ''
+])
+param spotEvictionPolicy string = ''
+param spotBillingProfile object = {
+  
+}
+
 param adminUsername string = 'azureuser'
 @allowed([
   'password'
@@ -159,11 +174,9 @@ resource vmssflex 'Microsoft.Compute/virtualMachineScaleSets@2021-03-01' = {
         // }
       }
       // Use spot instances for testing
-      // priority: 'Spot'
-      // evictionPolicy: 'Delete'
-      // billingProfile: {
-      //   maxPrice: -1
-      // }
+      priority: priority
+      evictionPolicy: spotEvictionPolicy
+      billingProfile: spotBillingProfile
       // Enable Terminate notification
       scheduledEventsProfile: {
         terminateNotificationProfile: {
