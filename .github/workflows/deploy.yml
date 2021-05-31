@@ -7,6 +7,8 @@ on:
   # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [main]
+    paths:
+      - 'vmss-flex-n-tier-demo/**'
   pull_request:
     branches: [main]
 
@@ -48,6 +50,6 @@ jobs:
         with:
           # Specify the script here
           inlineScript: |
-            az deployment sub create -n $AZURE_RG -l $AZURE_LOCATION -f $GITHUB_WORKSPACE/main.bicep
+            az deployment sub create -n $AZURE_RG -l $AZURE_LOCATION -f $GITHUB_WORKSPACE/vmss-flex-n-tier-demo/main.bicep
           # Azure CLI version to be used to execute the script. If not provided, latest version is used
           # azcliversion: # optional, default is latest
