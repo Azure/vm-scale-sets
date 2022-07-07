@@ -48,6 +48,10 @@ The following SKUs are currently supported (more will be added):
 | MicrosoftWindowsServer  | WindowsServer | 2012-R2-Datacenter | latest   |
 |  MicrosoftWindowsServer | WindowsServer | 2016-Datacenter    | latest   |
 | Canonical               | UbuntuServer  | 16.04-LTS          | latest  |
+|MicrosoftCblMariner      | Cbl-Mariner   | cbl-mariner-1      | latest   |
+|MicrosoftCblMariner      | Cbl-Mariner   | 1-gen2             | latest   |
+|MicrosoftCblMariner      | Cbl-Mariner   | cbl-mariner-2      | latest   |
+|MicrosoftCblMariner      | Cbl-Mariner   | cbl-mariner-2-gen2 | latest   |
 
 
 ## Application Health
