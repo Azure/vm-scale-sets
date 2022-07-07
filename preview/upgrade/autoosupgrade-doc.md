@@ -39,15 +39,42 @@ Register-AzureRmResourceProvider -ProviderNamespace Microsoft.Network
 
 ## Supported OS images
 
-Only OS platform images are currently supported (i.e. not custom images you created yourself). The _version_ proerty must be set to _latest_.
+Only OS platform images are currently supported (i.e. not custom images you created yourself). The _version_ property must be set to _latest_.
 
 The following SKUs are currently supported (more will be added):
 	
-| Publisher               | Offer         |  Sku               | Version  |
-|-------------------------|---------------|--------------------|----------|
-| MicrosoftWindowsServer  | WindowsServer | 2012-R2-Datacenter | latest   |
-|  MicrosoftWindowsServer | WindowsServer | 2016-Datacenter    | latest   |
-| Canonical               | UbuntuServer  | 16.04-LTS          | latest  |
+| Publisher               | Offer         |  Sku                                  | Version  |
+|-------------------------|---------------|---------------------------------------|----------|
+| MicrosoftWindowsServer  | WindowsServer | 2012-R2-Datacenter                    | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2016-Datacenter                       | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2016-Datacenter-gensecond             | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2016-Datacenter-gs                    | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2016-Datacenter-smalldisk             | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2016-Datacenter-with-containers       | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2016-Datacenter-with-containers-gs    | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2019-Datacenter                       | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2019-Datacenter-core                  | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2019-Datacenter-core-with-containers  | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2019-Datacenter-gensecond             | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2019-Datacenter-gs                    | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2019-Datacenter-smalldisk             | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2019-Datacenter-with-containers       | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2019-Datacenter-with-containers-gs    | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2022-Datacenter                       | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2022-Datacenter-smalldisk             | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2022-Datacenter-azure-edition         | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2022-Datacenter-core                  | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2022-Datacenter-core-smalldisk        | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2022-Datacenter-g2                    | latest   |
+| MicrosoftWindowsServer  | WindowsServer | 2022-Datacenter-smalldisk-g2          | latest   |
+| Canonical               | UbuntuServer  | 20.04-LTS                             | latest   |
+| Canonical               | UbuntuServer  | 20.04-LTS-Gen2                        | latest   |
+| Canonical               | UbuntuServer  | 18.04-LTS                             | latest   |
+| Canonical               | UbuntuServer  | 18.04-LTS-Gen2                        | latest   |
+| MicrosoftCblMariner     | Cbl-Mariner   | cbl-mariner-1                         | latest   |
+| MicrosoftCblMariner     | Cbl-Mariner   | 1-Gen2                                | latest   |
+| MicrosoftCblMariner     | Cbl-Mariner   | cbl-mariner-2                         | latest   |
+| MicrosoftCblMariner     | Cbl-Mariner   | cbl-mariner-2-Gen2                    | latest   |
 
 
 ## Application Health
