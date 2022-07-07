@@ -67,7 +67,6 @@ The following SKUs are currently supported (more will be added):
 | MicrosoftWindowsServer  | WindowsServer | 2022-Datacenter-core-smalldisk        | latest   |
 | MicrosoftWindowsServer  | WindowsServer | 2022-Datacenter-g2                    | latest   |
 | MicrosoftWindowsServer  | WindowsServer | 2022-Datacenter-smalldisk-g2          | latest   |
-| Canonical               | UbuntuServer  | 16.04-LTS                             | latest   |
 | Canonical               | UbuntuServer  | 20.04-LTS                             | latest   |
 | Canonical               | UbuntuServer  | 20.04-LTS-Gen2                        | latest   |
 | Canonical               | UbuntuServer  | 18.04-LTS                             | latest   |
