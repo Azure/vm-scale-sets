@@ -2,7 +2,8 @@
 
 Welcome to the VM scale set Azure Disk Encryption preview.
 
-Status (10/30/2017): VMSS disk encryption is a preview feature which requires self-registration in order to use (see below).
+> **Warning**
+> This content is deprecated. Please refer to the [official VMSS documentation](https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview).
 
 ## Caveats
 - No Linux OS disk encryption in the current preview.

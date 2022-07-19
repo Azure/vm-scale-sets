@@ -1,6 +1,7 @@
 # Azure VM scale set networking preview page 
 
-The templates and instructions in this repo are for new and recent network features being added to Azure VM scale sets. 
+> **Warning**
+> This content is deprecated. Please refer to the [official VMSS documentation](https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview).
 
 ## Feature status
 Last updated: 07/14/2017.

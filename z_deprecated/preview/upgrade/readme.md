@@ -1,6 +1,7 @@
 # Azure VM scale set automatic upgrade and rolling upgrade preview
 
-Welcome to the VM scale set automatic OS image upgrade preview. This readme also covers manually triggered rolling upgrades. 
+> **Warning**
+> This content is deprecated. Please refer to the [official VMSS documentation](https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview).
 
 Last update: 12/13/17.
 

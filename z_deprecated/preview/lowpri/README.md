@@ -1,5 +1,8 @@
 ### Autoscale demo app on Ubuntu 16.04 with low priority VMSS ###
 
+> **Warning**
+> This content is deprecated. Please refer to the [official VMSS documentation](https://docs.microsoft.com/en-us/azure/virtual-machine-scale-sets/overview).
+
 Simple self-contained Ubuntu autoscale example which includes a Python Bottle server to do work. The VM Scale Set scales up when average CPU across all VMs > 60%, scales down when avg CPU < 30%.
 
 - Deploy the scale set with an instance count of 1 
