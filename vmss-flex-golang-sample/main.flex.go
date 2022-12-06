@@ -5,6 +5,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 
@@ -23,6 +24,7 @@ var (
 	virtualNetworkName = "cruisego-vnet"
 	subnetName         = "default"
 	vmScaleSetName     = "cruisego"
+	forceDeleteEnabled = true
 )
 
 func main() {
@@ -66,6 +68,31 @@ func main() {
 		log.Fatal(err)
 	}
 	log.Println("virtual machine scale sets:", *vmss.ID)
+
+	instances, err := vmssInstances(ctx, cred, *vmss)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("Original instance count", len(instances))
+	log.Println("Original virtual machine scale sets instances:", instances)
+
+	//delete half of the instances
+	delcount := int(*vmss.SKU.Capacity) / 2
+	log.Println("Delete instance count:", delcount)
+
+	deleteVmssInstances(ctx, cred, *vmss, instances[:delcount])
+
+	vmss, err = getVMSS(ctx, cred)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	instances, err = vmssInstances(ctx, cred, *vmss)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("After delete instance count", len(instances))
+	log.Println("Remaining virtual machine scale sets instances:", instances)
 
 	// keepResource := os.Getenv("KEEP_RESOURCE")
 	// if len(keepResource) == 0 {
@@ -150,6 +177,85 @@ func getVMSS(ctx context.Context, cred azcore.TokenCredential) (*armcompute.Virt
 
 	// Get the virtual machine scale set
 	return &resp.VirtualMachineScaleSet, err
+}
+
+func vmssInstances(ctx context.Context, cred azcore.TokenCredential, vmss armcompute.VirtualMachineScaleSet) ([]string, error) {
+	// Create a new Azure Virtual Machine Scale Set client
+	vmssVmClient, err := armcompute.NewVirtualMachineScaleSetVMsClient(subscriptionID, cred, nil)
+	if err != nil {
+		return nil, err
+	}
+	// Get the list of instances in the vmss
+	listPager := vmssVmClient.NewListPager(resourceGroupName, *vmss.Name, nil)
+
+	// Create a slice to hold the names of the first two instances
+	var names []string
+	capacity := int(*vmss.SKU.Capacity)
+
+	// Loop through the first two instances and add their names to the slice
+	for i := 0; i < capacity; {
+
+		instances, err := listPager.NextPage(ctx)
+		if err != nil {
+			return nil, err
+		}
+
+		for _, instance := range instances.Value {
+
+			names = append(names, *instance.Name)
+			//fmt.Println("instance name:", *instance.Name)
+			i++
+		}
+	}
+
+	return names, nil
+}
+
+func deleteVmssInstances(ctx context.Context, cred azcore.TokenCredential, vmss armcompute.VirtualMachineScaleSet, names []string) error {
+	// Create a new Azure Virtual Machine Scale Set client
+	vmssClient, err := armcompute.NewVirtualMachineScaleSetsClient(subscriptionID, cred, nil)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Deleting instances... %v\n", names)
+	// Create a slice of instance IDs
+	var instanceIDs []string
+	for _, name := range names {
+		instanceIDs = append(instanceIDs, name)
+	}
+
+	// Convert the instance IDs slice to a slice of pointers to strings
+	var instanceIDPointers []*string
+	for _, id := range instanceIDs {
+		idCopy := id
+		instanceIDPointers = append(instanceIDPointers, &idCopy)
+	}
+
+	// Convert the instance IDs to a VirtualMachineScaleSetVMInstanceRequiredIDs struct
+	requiredIDs := armcompute.VirtualMachineScaleSetVMInstanceRequiredIDs{
+		InstanceIDs: instanceIDPointers,
+	}
+
+	enableForceDelete := armcompute.VirtualMachineScaleSetsClientBeginDeleteInstancesOptions{
+		ForceDeletion: &forceDeleteEnabled,
+	}
+
+	// Delete the instances with the specified IDs
+	future, err := vmssClient.BeginDeleteInstances(ctx, resourceGroupName, *vmss.Name, requiredIDs, &enableForceDelete)
+	if err != nil {
+		fmt.Printf(err.Error())
+		return err
+	}
+
+	// Wait for the operation to complete
+	_, err = future.PollUntilDone(ctx, nil)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("Deleted instances %v\n", names)
+	return nil
 }
 
 func createVMSS(ctx context.Context, cred azcore.TokenCredential, subnetID string) (*armcompute.VirtualMachineScaleSet, error) {
