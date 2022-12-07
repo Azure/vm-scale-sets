@@ -5,7 +5,6 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"os"
 
@@ -24,6 +23,7 @@ var (
 	virtualNetworkName = "vnet"
 	subnetName         = "default"
 	vmScaleSetName     = "myvmss"
+	vmScaleSetCapacity = int64(5)
 	forceDeleteEnabled = true
 )
 
@@ -63,11 +63,11 @@ func main() {
 	}
 	log.Println("virtual machine scale sets:", *vmss.ID)
 
-	vmss, err = getVMSS(ctx, cred)
-	if err != nil {
-		log.Fatal(err)
-	}
-	log.Println("virtual machine scale sets:", *vmss.ID)
+	// vmss, err = getVMSS(ctx, cred)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// log.Println("virtual machine scale sets:", *vmss.ID)
 
 	instances, err := vmssInstances(ctx, cred, *vmss)
 	if err != nil {
@@ -96,6 +96,7 @@ func main() {
 
 	keepResource := os.Getenv("KEEP_RESOURCE")
 	if len(keepResource) == 0 {
+		log.Println("CLEANUP. Deleting resource group: ", resourceGroupName)
 		err := cleanup(ctx, cred)
 		if err != nil {
 			log.Fatal(err)
@@ -218,12 +219,13 @@ func deleteVmssInstances(ctx context.Context, cred azcore.TokenCredential, vmss 
 		return err
 	}
 
-	fmt.Printf("Deleting instances... %v\n", names)
+	log.Println("Deleting instances: ", names)
 	// Create a slice of instance IDs
 	var instanceIDs []string
-	for _, name := range names {
-		instanceIDs = append(instanceIDs, name)
-	}
+	// for _, name := range names {
+	// 	instanceIDs = append(instanceIDs, name)
+	// }
+	instanceIDs = append(instanceIDs, names...)
 
 	// Convert the instance IDs slice to a slice of pointers to strings
 	var instanceIDPointers []*string
@@ -244,7 +246,7 @@ func deleteVmssInstances(ctx context.Context, cred azcore.TokenCredential, vmss 
 	// Delete the instances with the specified IDs
 	future, err := vmssClient.BeginDeleteInstances(ctx, resourceGroupName, *vmss.Name, requiredIDs, &enableForceDelete)
 	if err != nil {
-		fmt.Printf(err.Error())
+		log.Fatal(err)
 		return err
 	}
 
@@ -254,7 +256,6 @@ func deleteVmssInstances(ctx context.Context, cred azcore.TokenCredential, vmss 
 		return err
 	}
 
-	fmt.Printf("Deleted instances %v\n", names)
 	return nil
 }
 
@@ -272,7 +273,7 @@ func createVMSS(ctx context.Context, cred azcore.TokenCredential, subnetID strin
 			Location: to.Ptr(location),
 			SKU: &armcompute.SKU{
 				Name:     to.Ptr("Standard_D2s_v5"), //armcompute.VirtualMachineSizeTypesBasicA0
-				Capacity: to.Ptr[int64](20),
+				Capacity: to.Ptr(vmScaleSetCapacity),
 			},
 			Properties: &armcompute.VirtualMachineScaleSetProperties{
 				//Overprovision: to.Ptr(false),
