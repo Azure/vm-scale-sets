@@ -20,10 +20,10 @@ import (
 var (
 	subscriptionID     string
 	location           = "westus3"
-	resourceGroupName  = "cruisego"
-	virtualNetworkName = "cruisego-vnet"
+	resourceGroupName  = "vmss-flex-sample"
+	virtualNetworkName = "vnet"
 	subnetName         = "default"
-	vmScaleSetName     = "cruisego"
+	vmScaleSetName     = "myvmss"
 	forceDeleteEnabled = true
 )
 
@@ -39,31 +39,31 @@ func main() {
 	}
 	ctx := context.Background()
 
-	// resourceGroup, err := createResourceGroup(ctx, cred)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// log.Println("resources group:", *resourceGroup.ID)
+	resourceGroup, err := createResourceGroup(ctx, cred)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("resources group:", *resourceGroup.ID)
 
-	// virtualNetwork, err := createVirtualNetwork(ctx, cred)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// log.Println("virtual network:", *virtualNetwork.ID)
+	virtualNetwork, err := createVirtualNetwork(ctx, cred)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("virtual network:", *virtualNetwork.ID)
 
-	// subnet, err := createSubnet(ctx, cred)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// log.Println("subnet:", *subnet.ID)
+	subnet, err := createSubnet(ctx, cred)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("subnet:", *subnet.ID)
 
-	// vmss, err := createVMSS(ctx, cred, *subnet.ID)
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
-	// log.Println("virtual machine scale sets:", *vmss.ID)
+	vmss, err := createVMSS(ctx, cred, *subnet.ID)
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Println("virtual machine scale sets:", *vmss.ID)
 
-	vmss, err := getVMSS(ctx, cred)
+	vmss, err = getVMSS(ctx, cred)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -78,7 +78,7 @@ func main() {
 
 	//delete half of the instances
 	delcount := int(*vmss.SKU.Capacity) / 2
-	log.Println("Delete instance count:", delcount)
+	log.Println("Deleting half of the instances. Count:", delcount)
 
 	deleteVmssInstances(ctx, cred, *vmss, instances[:delcount])
 
@@ -94,14 +94,14 @@ func main() {
 	log.Println("After delete instance count", len(instances))
 	log.Println("Remaining virtual machine scale sets instances:", instances)
 
-	// keepResource := os.Getenv("KEEP_RESOURCE")
-	// if len(keepResource) == 0 {
-	// 	err := cleanup(ctx, cred)
-	// 	if err != nil {
-	// 		log.Fatal(err)
-	// 	}
-	// 	log.Println("cleaned up successfully.")
-	// }
+	keepResource := os.Getenv("KEEP_RESOURCE")
+	if len(keepResource) == 0 {
+		err := cleanup(ctx, cred)
+		if err != nil {
+			log.Fatal(err)
+		}
+		log.Println("cleaned up successfully.")
+	}
 }
 
 func createVirtualNetwork(ctx context.Context, cred azcore.TokenCredential) (*armnetwork.VirtualNetwork, error) {
@@ -271,18 +271,20 @@ func createVMSS(ctx context.Context, cred azcore.TokenCredential, subnetID strin
 		armcompute.VirtualMachineScaleSet{
 			Location: to.Ptr(location),
 			SKU: &armcompute.SKU{
-				Name:     to.Ptr("Basic_A0"), //armcompute.VirtualMachineSizeTypesBasicA0
-				Capacity: to.Ptr[int64](1),
+				Name:     to.Ptr("Standard_D2s_v5"), //armcompute.VirtualMachineSizeTypesBasicA0
+				Capacity: to.Ptr[int64](20),
 			},
 			Properties: &armcompute.VirtualMachineScaleSetProperties{
-				Overprovision: to.Ptr(false),
-				UpgradePolicy: &armcompute.UpgradePolicy{
-					Mode: to.Ptr(armcompute.UpgradeModeManual),
-					AutomaticOSUpgradePolicy: &armcompute.AutomaticOSUpgradePolicy{
-						EnableAutomaticOSUpgrade: to.Ptr(false),
-						DisableAutomaticRollback: to.Ptr(false),
-					},
-				},
+				//Overprovision: to.Ptr(false),
+				OrchestrationMode:        &armcompute.PossibleOrchestrationModeValues()[0],
+				PlatformFaultDomainCount: to.Ptr[int32](1),
+				// UpgradePolicy: &armcompute.UpgradePolicy{
+				// 	Mode: to.Ptr(armcompute.UpgradeModeManual),
+				// 	AutomaticOSUpgradePolicy: &armcompute.AutomaticOSUpgradePolicy{
+				// 		EnableAutomaticOSUpgrade: to.Ptr(false),
+				// 		DisableAutomaticRollback: to.Ptr(false),
+				// 	},
+				// },
 				VirtualMachineProfile: &armcompute.VirtualMachineScaleSetVMProfile{
 					OSProfile: &armcompute.VirtualMachineScaleSetOSProfile{
 						ComputerNamePrefix: to.Ptr("vmss"),
@@ -298,6 +300,7 @@ func createVMSS(ctx context.Context, cred azcore.TokenCredential, subnetID strin
 						},
 					},
 					NetworkProfile: &armcompute.VirtualMachineScaleSetNetworkProfile{
+						NetworkAPIVersion: to.Ptr(armcompute.NetworkAPIVersionTwoThousandTwenty1101),
 						NetworkInterfaceConfigurations: []*armcompute.VirtualMachineScaleSetNetworkConfiguration{
 							{
 								Name: to.Ptr(vmScaleSetName),
@@ -310,6 +313,15 @@ func createVMSS(ctx context.Context, cred azcore.TokenCredential, subnetID strin
 											Properties: &armcompute.VirtualMachineScaleSetIPConfigurationProperties{
 												Subnet: &armcompute.APIEntityReference{
 													ID: to.Ptr(subnetID),
+												},
+												PublicIPAddressConfiguration: &armcompute.VirtualMachineScaleSetPublicIPAddressConfiguration{
+													SKU: &armcompute.PublicIPAddressSKU{
+														Name: &armcompute.PossiblePublicIPAddressSKUNameValues()[1],
+													},
+													Name: to.Ptr("vmsspip"),
+													Properties: &armcompute.VirtualMachineScaleSetPublicIPAddressConfigurationProperties{
+														IdleTimeoutInMinutes: to.Ptr[int32](20),
+													},
 												},
 											},
 										},
