@@ -1,4 +1,5 @@
 
+# Create an virtual network and subnet
 resource "azurerm_virtual_network" "test" {
   name                = "terraformvnet"
   address_space       = ["10.0.0.0/16"]
@@ -7,13 +8,13 @@ resource "azurerm_virtual_network" "test" {
 }
 
 resource "azurerm_subnet" "subnet" {
-  name                 = "internal"
+  name                 = "subnet"
   resource_group_name  = azurerm_resource_group.rg.name
   virtual_network_name = azurerm_virtual_network.test.name
   address_prefixes     = ["10.0.0.0/20"]
 }
 
-# network security group for the subnet with a rule to allow http traffic and https
+# network security group for the subnet with a rule to allow http, https and ssh traffic
 resource "azurerm_network_security_group" "myNSG" {
   name                = "myNSG"
   location            = azurerm_resource_group.rg.location
@@ -61,7 +62,7 @@ resource "azurerm_subnet_network_security_group_association" "myNSG" {
   network_security_group_id = azurerm_network_security_group.myNSG.id
 }
 
-
+# A public IP address for the load balancer
 resource "azurerm_public_ip" "example" {
   name                = "lb-publicIP"
   location            = azurerm_resource_group.rg.location
@@ -69,9 +70,10 @@ resource "azurerm_public_ip" "example" {
   allocation_method   = "Static"
   sku                 = "Standard"
   zones               = ["1","2","3"]
-  domain_name_label = uuidv5("dns", "${azurerm_resource_group.rg.name}.terraform.io")
+  domain_name_label = "${azurerm_resource_group.rg.name}-dns"
 }
 
+# A load balancer with a frontend IP configuration and a backend address pool
 resource "azurerm_lb" "example" {
   name                = "myLB"
   location            = azurerm_resource_group.rg.location
@@ -109,13 +111,13 @@ resource "azurerm_lb_probe" "example" {
   request_path        = "/"
 }
 
-#add lb nat rules
+#add lb nat rules to allow ssh access to the backend instances
 resource "azurerm_lb_nat_rule" "ssh" {
   name                           = "ssh"
   resource_group_name            = azurerm_resource_group.rg.name
   loadbalancer_id                = azurerm_lb.example.id
   protocol                       = "Tcp"
-  frontend_port_start            = 50000
+  frontend_port_start            = var.nat_rule_frontend_port_start
   frontend_port_end              = 50119 
   backend_port                   = 22
   frontend_ip_configuration_name = "myPublicIP"
@@ -131,7 +133,7 @@ resource "azurerm_public_ip" "natgwpip" {
   zones               = ["1"]
 }
 
-#add nat gateway
+#add nat gateway to enable outbound traffic from the backend instances
 resource "azurerm_nat_gateway" "example" {
   name                    = "nat-Gateway"
   location                = azurerm_resource_group.rg.location
