@@ -161,6 +161,6 @@ module autoscaler './compute/vmssautoscale.bicep' = {
 //     authenticationType: 'sshPublicKey'
 //     adminPasswordOrKey: sshkey.outputs.publickey
 //     // authenticationType: 'password'
-//     // adminPasswordOrKey: 'DoN0TUs3ThisT3rr!bleP@ssw0rd'
+//     // adminPasswordOrKey: guid(resourceGroup().id, deployment().name)d
 //   }
 // }

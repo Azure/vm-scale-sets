@@ -38,7 +38,7 @@ param adminUsername string = 'azureuser'
   'sshPublicKey'
 ])
 param authenticationType string = 'password'
-param adminPasswordOrKey string = '6yEV9YmJkuG8fvYjj^k84'
+param adminPasswordOrKey string = guid(resourceGroup().id, deployment().name)
 
 var networkApiVersion = '2020-11-01'
 // This launches a simple node app that returns the contents of IMDS. It also exposes /health for application health. https://github.com/fitzgeraldsteele/azure-sig-aib-vmss-demo/blob/master/cloud-init/cloud-init.sample.yml
