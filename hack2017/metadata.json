@@ -1,7 +1,0 @@
-{
-  "itemDisplayName": "Create scale set of RDSH servers",
-  "description": "This template updates servers in an RD Session Host collection",
-  "summary": "Updates existing session collection with new template image",
-  "githubUsername": "gbowerman",
-  "dateUpdated": "2017-07-24"
-}
